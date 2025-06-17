@@ -1,3 +1,4 @@
+import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 
 export default function Home() {
@@ -7,6 +8,7 @@ export default function Home() {
       <main className="p-6">
         <h2 className="text-xl font-medium">Welcome to ALTRA Trading Platform</h2>
       </main>
+       <Footer />
     </div>
   );
 }
