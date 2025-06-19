@@ -1,7 +1,7 @@
 import Footer from "@/components/Footer";
 import Graph from "@/components/Graph";
 import Navbar from "@/components/Navbar";
-import { createChart, CrosshairMode, CandlestickData, CandlestickSeries } from "lightweight-charts";
+import { CandlestickData} from "lightweight-charts";
 
 async function getData(): Promise<CandlestickData[]> {
   const res = await fetch("http://localhost:3000/ohlcv.json"); // or /api/data if using API
