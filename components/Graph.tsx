@@ -36,8 +36,7 @@ export default function Graph({candlestickdata}:GraphData) {
       },
     });
 
-    let series;
-    series = chart.addSeries(CandlestickSeries);
+    const series = chart.addSeries(CandlestickSeries);
     series.setData(candlestickdata)
 
     chartRef.current = chart;
