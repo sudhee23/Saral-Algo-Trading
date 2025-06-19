@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import { createChart, CrosshairMode, CandlestickData, CandlestickSeries } from "lightweight-charts";
+import { createChart, CrosshairMode, CandlestickData, CandlestickSeries, ISeriesApi, IChartApi } from "lightweight-charts";
 type GraphData= {
   candlestickdata:CandlestickData[];
 
@@ -8,8 +8,8 @@ type GraphData= {
 export default function Graph({candlestickdata}:GraphData) {
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const [chartType, setChartType] = useState<"candlestick" | "line">("candlestick");
-  const chartRef = useRef<any>(null);
-  const seriesRef = useRef<any>(null);
+  const chartRef = useRef<IChartApi|null>(null);
+  const seriesRef = useRef<ISeriesApi<"Candlestick"> | null>(null);
 
   useEffect(() => {
     if (!chartContainerRef.current) return;
