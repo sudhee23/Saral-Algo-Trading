@@ -1,0 +1,73 @@
+"use client";
+import React, { useEffect, useRef, useState } from "react";
+import { createChart, CrosshairMode, CandlestickData, CandlestickSeries } from "lightweight-charts";
+type GraphData= {
+  candlestickdata:CandlestickData[];
+
+}
+export default function Graph({candlestickdata}:GraphData) {
+  const chartContainerRef = useRef<HTMLDivElement>(null);
+  const [chartType, setChartType] = useState<"candlestick" | "line">("candlestick");
+  const chartRef = useRef<any>(null);
+  const seriesRef = useRef<any>(null);
+
+  useEffect(() => {
+    if (!chartContainerRef.current) return;
+
+    // Remove old chart
+    if (chartRef.current) {
+      chartRef.current.remove();
+    }
+
+    const chart = createChart(chartContainerRef.current, {
+      width: chartContainerRef.current.clientWidth,
+      height: 400,
+      layout: {
+        background: { color: "#000000" },
+        textColor: "#eee",
+        attributionLogo:false,
+      },
+      grid: {
+        vertLines: { color: "#333" },
+        horzLines: { color: "#333" },
+      },
+      crosshair: {
+        mode: CrosshairMode.Normal,
+      },
+    });
+
+    let series;
+    series = chart.addSeries(CandlestickSeries);
+    series.setData(candlestickdata)
+
+    chartRef.current = chart;
+    seriesRef.current = series;
+
+    const handleResize = () => {
+      chart.resize(chartContainerRef.current!.clientWidth, 400);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      chart.remove();
+    };
+  }, [chartType]);
+
+  return (
+    <div className="mb-8">
+      <div className="mb-4">
+        <button
+          onClick={() => setChartType("candlestick")}
+          className={`mr-2 px-4 py-1 rounded ${
+            chartType === "candlestick" ? "bg-blue-600 text-white" : "bg-gray-300"
+          }`}
+        >
+          Candlestick
+        </button>
+      </div>
+      <div ref={chartContainerRef} className="w-full" />
+    </div>
+  );
+}
