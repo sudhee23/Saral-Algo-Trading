@@ -1,20 +1,39 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import { createChart, CrosshairMode, CandlestickData, CandlestickSeries, ISeriesApi, IChartApi } from "lightweight-charts";
-type GraphData= {
-  candlestickdata:CandlestickData[];
+import {
+  createChart,
+  CrosshairMode,
+  CandlestickData,
+  CandlestickSeries,
+  ISeriesApi,
+  IChartApi,
+  Time,
+} from "lightweight-charts";
 
+async function getData(ticker:string): Promise<CandlestickData<Time>[]> {
+  const res = await fetch("http://localhost:3000/ohlcv.json");
+  const json = await res.json();
+  return json[ticker]; // Or whichever ticker
 }
-export default function Graph({candlestickdata}:GraphData) {
+
+type GraphData = {
+  ticker: string;
+};
+
+export default function Graph({ ticker }: GraphData) {
   const chartContainerRef = useRef<HTMLDivElement>(null);
-  const [chartType, setChartType] = useState<"candlestick" | "line">("candlestick");
-  const chartRef = useRef<IChartApi|null>(null);
+  const chartRef = useRef<IChartApi | null>(null);
   const seriesRef = useRef<ISeriesApi<"Candlestick"> | null>(null);
+  const [data, setData] = useState<CandlestickData<Time>[]>([]);
+  const [chartType, setChartType] = useState<"candlestick" | "line">("candlestick");
 
   useEffect(() => {
-    if (!chartContainerRef.current) return;
+    getData(ticker).then(setData);
+  }, [ticker]);
 
-    // Remove old chart
+  useEffect(() => {
+    if (!chartContainerRef.current || data.length === 0) return;
+
     if (chartRef.current) {
       chartRef.current.remove();
     }
@@ -25,7 +44,7 @@ export default function Graph({candlestickdata}:GraphData) {
       layout: {
         background: { color: "#000000" },
         textColor: "#eee",
-        attributionLogo:false,
+        attributionLogo:false
       },
       grid: {
         vertLines: { color: "#333" },
@@ -37,7 +56,7 @@ export default function Graph({candlestickdata}:GraphData) {
     });
 
     const series = chart.addSeries(CandlestickSeries);
-    series.setData(candlestickdata)
+    series.setData(data);
 
     chartRef.current = chart;
     seriesRef.current = series;
@@ -52,7 +71,7 @@ export default function Graph({candlestickdata}:GraphData) {
       window.removeEventListener("resize", handleResize);
       chart.remove();
     };
-  }, [chartType]);
+  }, [data, chartType]);
 
   return (
     <div className="mb-8">
