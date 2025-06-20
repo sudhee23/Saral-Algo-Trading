@@ -13,7 +13,7 @@ import {
 async function getData(ticker:string): Promise<CandlestickData<Time>[]> {
   const res = await fetch("/Saral-Algo-Trading/ohlcv.json");
   const json = await res.json();
-  return json[ticker]; // Or whichever ticker
+  return json[ticker]; 
 }
 
 type GraphData = {
