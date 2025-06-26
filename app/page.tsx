@@ -7,8 +7,14 @@ export default async function Home() {
     <div className="flex flex-col min-h-screen">
       <Navbar />
       <main className="p-6 flex-1">
-        <Graph ticker={"RELIANCE.NS"} />
-        <h2 className="text-xl font-medium">Welcome to ALTRA Trading Platform</h2>
+        <div className="flex gap-6">
+          <div className="w-2/3">
+            <Graph ticker={"RELIANCE.NS"} />
+          </div>
+          <div className="w-1/3 rounded-lg min-h-[400px] flex items-center justify-center">
+            <span className="text-gray-400">Table will appear here</span>
+          </div>
+        </div>
       </main>
        <Footer />
     </div>

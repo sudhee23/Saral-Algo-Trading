@@ -57,6 +57,17 @@ export default function Graph({ ticker }: GraphData) {
 
     const series = chart.addSeries(CandlestickSeries);
     series.setData(data);
+    if (data.length > 0) {
+      const from = data[0].time;
+      const to = data[data.length - 1].time;
+      chart.timeScale().setVisibleRange({ from, to });
+    }
+    chart.timeScale().applyOptions({
+        rightOffset: 0,
+        barSpacing: 5, // Adjust as needed (smaller = more candles visible)
+        fixLeftEdge: true,
+        fixRightEdge: true,
+      });
 
     chartRef.current = chart;
     seriesRef.current = series;
