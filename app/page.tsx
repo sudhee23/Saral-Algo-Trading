@@ -9,7 +9,7 @@ export default async function Home() {
       <main className="p-6 flex-1">
         <div className="flex gap-6">
           <div className="w-2/3">
-            <Graph ticker={"RELIANCE.NS"} />
+            <Graph initialTicker={"RELIANCE.NS"} />
           </div>
           <div className="w-1/3 rounded-lg min-h-[400px] flex items-center justify-center">
             <span className="text-gray-400">Table will appear here</span>
