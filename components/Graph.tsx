@@ -13,7 +13,11 @@ import {
   TickMarkType,
 } from "lightweight-charts";
 
-async function getData(ticker:string): Promise<CandlestickData<Time>[]> {
+interface Ohlcv extends CandlestickData<Time> {
+  volume: number;
+}
+
+async function getData(ticker:string): Promise<Ohlcv[]> {
   //const basepath=""
   const basepath= "/Saral-Algo-Trading"
   const res = await fetch(`${basepath}/ohlcv.json`);
@@ -28,8 +32,8 @@ type GraphData = {
 export default function Graph({ initialTicker }: GraphData) {
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<IChartApi | null>(null);
-  const seriesRef = useRef<ISeriesApi<"Candlestick"> | null>(null);
-  const [data, setData] = useState<CandlestickData<Time>[]>([]);
+  const seriesRef = useRef<ISeriesApi<"Candlestick" | "Line" | "Area"> | null>(null);
+  const [data, setData] = useState<Ohlcv[]>([]);
   const [chartType, setChartType] = useState<"candlestick" | "line" | "volume">("candlestick");
   const [ticker, setTicker] = useState<string>(initialTicker);
   const TICKERS = ["RELIANCE.NS","MARUTI.NS","TCS.NS"]
@@ -45,6 +49,7 @@ export default function Graph({ initialTicker }: GraphData) {
       try {
         chartRef.current.remove();
       } catch (e) {
+        console.warn("Error removing chart:", e);
         // Ignore errors if chart is already disposed
       }
       chartRef.current = null;
@@ -124,13 +129,13 @@ export default function Graph({ initialTicker }: GraphData) {
         
       },
     });
-    let series: ISeriesApi<any>;
+    let series: ISeriesApi<"Candlestick"> | ISeriesApi<"Line"> | ISeriesApi<"Area">;
     if (chartType === "candlestick") {
       series = chart.addSeries(CandlestickSeries);
       series.setData(data);
     } else if (chartType === "line") {
       // Convert candlestick data to line data (use close price)
-      const lineData: LineData<Time>[] = data.map(d => ({
+      const lineData: LineData<Time>[] = data.map((d: Ohlcv) => ({
         time: d.time,
         value: d.close,
       }));
@@ -138,9 +143,9 @@ export default function Graph({ initialTicker }: GraphData) {
       series.setData(lineData);
     } else {
       // Convert candlestick data to line data (use volume)
-      const volumeLineData: LineData<Time>[] = data.map(d => ({
+      const volumeLineData: LineData<Time>[] = data.map((d: Ohlcv) => ({
         time: d.time,
-        value: (d as any).volume ?? 0,
+        value: d.volume ?? 0,
       }));
       series = chart.addSeries(LineSeries, {
         color: "#26a69a",
@@ -165,7 +170,7 @@ export default function Graph({ initialTicker }: GraphData) {
 
     // Add ResizeObserver for more reliable resizing
     const resizeObserver = new window.ResizeObserver(entries => {
-      for (let entry of entries) {
+      for (const entry of entries) {
         if (entry.contentRect.width && chartRef.current) {
           chartRef.current.resize(entry.contentRect.width, 400);
         }
@@ -186,6 +191,7 @@ export default function Graph({ initialTicker }: GraphData) {
         try {
           chartRef.current.remove();
         } catch (e) {
+          console.warn("Error removing chart:", e);
           // Ignore errors if chart is already disposed
         }
         chartRef.current = null;
