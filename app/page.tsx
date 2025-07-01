@@ -1,6 +1,7 @@
 import Footer from "@/components/Footer";
 import Graph from "@/components/Graph";
 import Navbar from "@/components/Navbar";
+import StocksTable from "@/components/StocksTable";
 
 export default async function Home() {
   return (
@@ -11,8 +12,8 @@ export default async function Home() {
           <div className="w-2/3">
             <Graph initialTicker={"RELIANCE.NS"} />
           </div>
-          <div className="w-1/3 rounded-lg min-h-[400px] flex items-center justify-center">
-            <span className="text-gray-400">Table will appear here</span>
+          <div className="w-1/3">
+            <StocksTable />
           </div>
         </div>
       </main>
