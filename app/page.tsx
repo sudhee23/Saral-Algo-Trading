@@ -1,5 +1,6 @@
 import Footer from "@/components/Footer";
 import Graph from "@/components/Graph";
+import MarketNews from "@/components/MarketNews";
 import Navbar from "@/components/Navbar";
 import StocksTable from "@/components/StocksTable";
 
@@ -16,6 +17,7 @@ export default async function Home() {
             <StocksTable />
           </div>
         </div>
+        <MarketNews />
       </main>
        <Footer />
     </div>
