@@ -9,11 +9,11 @@ export default async function Home() {
     <div className="flex flex-col min-h-screen">
       <Navbar />
       <main className="p-6 flex-1">
-        <div className="flex gap-6">
-          <div className="w-2/3">
+        <div className="flex flex-col lg:flex-row gap-6">
+          <div className="w-full lg:w-2/3">
             <Graph initialTicker={"RELIANCE.NS"} />
           </div>
-          <div className="w-1/3">
+          <div className="w-full lg:w-1/3">
             <StocksTable />
           </div>
         </div>
