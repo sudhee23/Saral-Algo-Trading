@@ -1,30 +1,17 @@
-import { NextResponse } from 'next/server';
-import { comparePassword } from '@/lib/hash';
-import { signJwt } from '@/lib/jwt';
-import { queryUserByEmail, Env } from '@/lib/db';
-
-export async function POST(req: Request, { env }: { env: Env }) {
-  const { email, password } = await req.json();
-
-  const user = await queryUserByEmail(env.DB, email);
-  if (!user) {
-    return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
-  }
-
-  const valid = await comparePassword(password, user.password as string);
-  if (!valid) {
-    return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
-  }
-
-  const token = signJwt({ id: user.id, email });
-
-  const res = NextResponse.json({ message: 'Login successful' });
-  res.cookies.set('token', token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
-    path: '/',
+export async function POST(req: Request) {
+  const body = await req.json();
+  const res = await fetch(`${process.env.HONO_BACKEND_URL}/auth/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+    credentials: 'include',
   });
-
-  return res;
-}
+  const data = await res.json();
+  return new Response(JSON.stringify(data), {
+    status: res.status,
+    headers: {
+      'Content-Type': 'application/json',
+      'Set-Cookie': res.headers.get('set-cookie') || '',
+    },
+  });
+} 

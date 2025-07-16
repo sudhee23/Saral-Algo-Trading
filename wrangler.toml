@@ -1,0 +1,11 @@
+name = "algo-trading-backend"
+main = "backend/index.ts"  
+compatibility_date = "2025-07-01"
+
+[vars]
+JWT_SECRET = "wertyukl,mjhgfdszxcvbnm,.jndfgh"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "algo_trading_db"
+database_id = "cd0782a1b0099fbcb56826065af3af18"

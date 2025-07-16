@@ -1,19 +1,11 @@
-import { D1Database } from '@cloudflare/workers-types';
+import type { D1Database } from '@cloudflare/workers-types';
 
-export type Env = {
-  DB: D1Database
+// lib/db.ts
+export async function queryLocalDb(sql: string, params: any[] = []) {
+  // in local dev, connect to SQLite with better-sqlite3 or similar
+  return []; // fake
 }
 
-// helper to run a query (works inside Next.js API routes)
-export async function queryUserByEmail(db: D1Database, email: string) {
-  const { results } = await db.prepare("SELECT * FROM users WHERE email = ?")
-    .bind(email)
-    .all();
-  return results[0];
-}
-
-export async function insertUser(db: D1Database, id: string, email: string, hashedPassword: string) {
-  await db.prepare("INSERT INTO users (id, email, password) VALUES (?, ?, ?)")
-    .bind(id, email, hashedPassword)
-    .run();
+export async function queryCloudflareDb(db: D1Database, sql: string, params: any[] = []) {
+  return await db.prepare(sql).bind(...params).all();
 }
