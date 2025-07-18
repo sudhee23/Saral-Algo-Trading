@@ -1,4 +1,5 @@
 import {getRequestContext} from '@cloudflare/next-on-pages'
+export const runtime = 'edge';
 export async function POST(req: Request) {
   const body = await req.json();
   //@ts-expect-error: Environment variable is not defined in the type definitions

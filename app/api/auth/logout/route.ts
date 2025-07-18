@@ -1,3 +1,5 @@
+import {getRequestContext} from '@cloudflare/next-on-pages';
+export const runtime = 'edge';
 export async function POST() {
   //@ts-expect-error: Environment variable is not defined in the type definitions
   const res = await fetch(`${getRequestContext().env.HONO_BACKEND_URL}/auth/logout`, {
