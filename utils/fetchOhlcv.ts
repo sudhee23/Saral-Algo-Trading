@@ -6,7 +6,7 @@ export interface Ohlcv extends CandlestickData<Time> {
 }
 
 export async function fetchOhlcv(ticker: string): Promise<Ohlcv[]> {
-  const basePath = '/Saral-Algo-Trading/newohlcv.json'; // or real API later
+  const basePath = '/newohlcv.json'; // or real API later
 
   const res = await fetch(basePath, { cache: 'no-store' });
 
@@ -14,6 +14,6 @@ export async function fetchOhlcv(ticker: string): Promise<Ohlcv[]> {
     throw new Error(`Failed to fetch data for ${ticker}`);
   }
 
-  const json = await res.json();
+  const json: Record<string, Ohlcv[]> = await res.json();
   return json[ticker] ?? [];
 }

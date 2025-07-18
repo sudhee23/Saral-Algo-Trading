@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+/backend/node_modules
 /.pnp
 .pnp.*
 .yarn/*
@@ -16,6 +17,10 @@
 # next.js
 /.next/
 /out/
+
+# wrangler
+/.wrangler
+/backend/.wrangler
 
 # production
 /build

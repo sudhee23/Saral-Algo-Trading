@@ -1,5 +1,6 @@
 export async function POST() {
-  const res = await fetch(`${process.env.HONO_BACKEND_URL}/auth/logout`, {
+  //@ts-expect-error: Environment variable is not defined in the type definitions
+  const res = await fetch(`${getRequestContext().env.HONO_BACKEND_URL}/auth/logout`, {
     method: 'POST',
     credentials: 'include',
   });
