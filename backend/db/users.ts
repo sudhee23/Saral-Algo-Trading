@@ -6,5 +6,5 @@ export async function getUserByEmail(db: D1Database, email: string) {
 }
 
 export async function createUser(db: D1Database, email: string, password: string, role:string = 'USER') {
-  return await db.prepare('INSERT INTO users (email, password, role) VALUES (?, ?)').bind(email, password, role).run();
+  return await db.prepare('INSERT INTO users (email, password, role) VALUES (?, ?, ?)').bind(email, password, role).run();
 } 
