@@ -5,6 +5,6 @@ export async function getUserByEmail(db: D1Database, email: string) {
   return result;
 }
 
-export async function createUser(db: D1Database, email: string, password: string) {
-  return await db.prepare('INSERT INTO users (email, password) VALUES (?, ?)').bind(email, password).run();
+export async function createUser(db: D1Database, email: string, password: string, role:string = 'USER') {
+  return await db.prepare('INSERT INTO users (email, password, role) VALUES (?, ?)').bind(email, password, role).run();
 } 

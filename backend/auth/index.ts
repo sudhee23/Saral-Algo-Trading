@@ -26,7 +26,7 @@ auth.post('/login', async (c) => {
   if (!valid) {
     return c.json({ error: 'Invalid credentials' }, 401);
   }
-  const token = await signJwt({ id: user.id, email: user.email }, c);
+  const token = await signJwt({ id: user.id, email: user.email, role: user.role }, c);
   c.header('Set-Cookie', `token=${token}; HttpOnly; Path=/; Secure; SameSite=Strict; Max-Age=3600`);
   return c.json({ success: true });
 });
@@ -42,7 +42,7 @@ auth.post('/signup', async (c) => {
   }
   const hash = await hashPassword(password);
   await createUser(db, email, hash);
-  const token = await signJwt({ email }, c);
+  const token = await signJwt({ email, role: 'USER' }, c);
   c.header('Set-Cookie', `token=${token}; HttpOnly; Path=/; Secure; SameSite=Strict; Max-Age=3600`);
   return c.json({ success: true });
 });

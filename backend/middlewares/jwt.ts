@@ -1,9 +1,10 @@
 import { sign, verify } from 'hono/jwt';
 import { Context } from 'hono';
+import { JWTPayload } from 'hono/utils/jwt/types';
 
 const JWT_SECRET = (c: Context) => c.env.JWT_SECRET || 'your_secret';
 
-export async function signJwt(payload: Record<string, any>, c: Context) {
+export async function signJwt(payload: JWTPayload, c: Context) {
   return await sign(payload, JWT_SECRET(c));
 }
 
