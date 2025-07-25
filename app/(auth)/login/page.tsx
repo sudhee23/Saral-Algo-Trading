@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 
 interface LoginResponse {
   success: boolean;
+  username?: string;
   token?: string;
   error?: string;
 }
@@ -25,7 +26,7 @@ export default function LoginPage() {
     });
     const data: LoginResponse = await res.json();
     if (res.ok && data.success) {
-      router.push('/');
+      router.push('/' + data.username);
     } else {
       setError(data.error || 'Login failed');
     }

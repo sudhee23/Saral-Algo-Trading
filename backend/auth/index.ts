@@ -28,7 +28,10 @@ auth.post('/login', async (c) => {
   }
   const token = await signJwt({ id: user.id, email: user.email, role: user.role }, c);
   c.header('Set-Cookie', `token=${token}; HttpOnly; Path=/; Secure; SameSite=Strict; Max-Age=3600`);
-  return c.json({ success: true });
+  if (typeof user.email === 'string') {
+    return c.json({ success: true, username: user.email.split('@')[0] });
+  }
+  return c.json({ error: 'Invalid user data' }, 500);
 });
 
 // POST /auth/signup
