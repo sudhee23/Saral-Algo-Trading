@@ -1,6 +1,7 @@
 "use client";
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 interface LoginResponse {
   success: boolean;
@@ -63,7 +64,7 @@ export default function LoginPage() {
         </form>
         <p className="mt-6 text-center text-gray-600 text-sm">
           Don&apos;t have an account?{' '}
-          <a href="/signup" className="text-blue-700 hover:underline font-medium">Sign up</a>
+          <Link href="/signup" className="text-blue-700 hover:underline font-medium">Sign up</Link>
         </p>
       </div>
     </div>
