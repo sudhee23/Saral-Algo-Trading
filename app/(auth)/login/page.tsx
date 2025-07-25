@@ -14,6 +14,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isTransitioning, setIsTransitioning] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -27,7 +28,10 @@ export default function LoginPage() {
     });
     const data: LoginResponse = await res.json();
     if (res.ok && data.success) {
-      router.push('/' + data.username);
+      setIsTransitioning(true);
+      setTimeout(()=>{
+        router.push('/' + data.username);
+      },1000);
     } else {
       setError(data.error || 'Login failed');
     }
@@ -67,6 +71,12 @@ export default function LoginPage() {
           <Link href="/signup" className="text-blue-700 hover:underline font-medium">Sign up</Link>
         </p>
       </div>
+      {isTransitioning && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-blue-500 border-solid"></div>
+        </div>
+      )}
     </div>
   );
 }
+
