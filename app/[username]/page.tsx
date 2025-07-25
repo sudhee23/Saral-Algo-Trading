@@ -3,6 +3,8 @@ import { useMe } from '@/hooks/useMe';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect } from 'react';
+export const runtime = 'edge';
+
 
 export default function UserPage() {
   const { user, isLoading } = useMe();
