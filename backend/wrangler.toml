@@ -7,5 +7,5 @@ JWT_SECRET = "wertyukl,mjhgfdszxcvbnm,.jndfgh"
 
 [[d1_databases]]
 binding = "DB"
-database_name = "algo_trading_db"
-database_id = "544e5b92-f34f-498f-87ce-cd30a15ecb63"
+database_name = "saral-db"
+database_id = "19e3c176-0038-438c-ba63-6af7c672eff4"

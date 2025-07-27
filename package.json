@@ -16,7 +16,7 @@
     "hono": "^4.8.5",
     "jsonwebtoken": "^9.0.2",
     "lightweight-charts": "^5.0.7",
-    "next": "15.3.3",
+    "next": "^15.3.3",
     "prisma": "^6.11.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
