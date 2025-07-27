@@ -76,7 +76,7 @@ export default function UserPage() {
 
   // Mock data for holdings and watchlist
   useEffect(() => {
-    if (user?.id) {
+    if (user) {
       // Mock holdings data
       const mockHoldings: Holding[] = [
         {
