@@ -7,6 +7,8 @@ import { fetchOhlcv } from '@/utils/fetchOhlcv';
 
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import HoldingsList from '@/components/holdings/HoldingsList';
+import WatchlistList from '@/components/watchlist/WatchlistList';
 
 export const runtime = 'edge';
 
@@ -41,13 +43,7 @@ const TABS = [
   { key: 'watchlist', label: 'Watchlist' },
 ];
 
-function getColorForSymbol(symbol: string) {
-  // Simple hash for color
-  const colors = ['bg-blue-500', 'bg-green-500', 'bg-yellow-500', 'bg-purple-500', 'bg-pink-500', 'bg-indigo-500', 'bg-red-500'];
-  let hash = 0;
-  for (let i = 0; i < symbol.length; i++) hash += symbol.charCodeAt(i);
-  return colors[hash % colors.length];
-}
+
 
 
 
@@ -291,120 +287,19 @@ export default function UserPage() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Holdings/Watchlist Tabs and Content (as before) */}
+        {/* Holdings/Watchlist Tabs and Content */}
         {activeTab === 'holdings' && (
           <div className="bg-white rounded-xl shadow p-8 mt-8">
-            {holdingsData.length === 0 ? (
-              <div className="flex flex-col items-center justify-center min-h-[400px]">
-                <div className="mb-6">
-                  <div className="w-32 h-32 rounded-full bg-gray-100 flex items-center justify-center mx-auto">
-                    <span className="text-5xl text-gray-300 font-bold">📈</span>
-                  </div>
-                </div>
-                <h2 className="text-2xl font-semibold mb-2 text-gray-800">Introducing Holdings</h2>
-                <p className="text-gray-500 mb-6">Investing in stocks will never be the same again</p>
-                <button className="px-6 py-2 bg-[#001f3f] text-white rounded-lg font-semibold hover:bg-[#001a33] transition">Try it out</button>
-              </div>
-            ) : (
-              <div className="space-y-4">
-                <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-xl font-semibold text-gray-800">Your Holdings</h3>
-                  <div className="text-sm text-gray-500">
-                    {holdingsData.length} stock{holdingsData.length !== 1 ? 's' : ''}
-                  </div>
-                </div>
-                {holdingsData.map((holding) => (
-                  <div key={holding.id} className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-md transition-shadow">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-4">
-                        <div className={`w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-lg ${getColorForSymbol(holding.stock_symbol)}`}>
-                          {holding.stock_symbol.slice(0,2).toUpperCase()}
-                        </div>
-                        <div>
-                          <div className="font-semibold text-gray-900 text-lg">{holding.stock_symbol}</div>
-                          <div className="text-sm text-gray-500">{holding.quantity} shares</div>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <div className="font-semibold text-gray-900 text-lg">₹{holding.currentPrice.toLocaleString()}</div>
-                        <div className={`text-sm font-medium ${holding.pnl >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                          {holding.pnl >= 0 ? '+' : ''}₹{holding.pnl.toLocaleString()} ({holding.pnlPercent.toFixed(2)}%)
-                        </div>
-                      </div>
-                    </div>
-                    <div className="mt-4 pt-4 border-t border-gray-100">
-                      <div className="grid grid-cols-3 gap-4 text-sm">
-                        <div>
-                          <div className="text-gray-500">Avg Price</div>
-                          <div className="font-medium text-gray-900">₹{holding.avg_price.toLocaleString()}</div>
-                        </div>
-                        <div>
-                          <div className="text-gray-500">Total Value</div>
-                          <div className="font-medium text-gray-900">₹{holding.totalValue.toLocaleString()}</div>
-                        </div>
-                        <div>
-                          <div className="text-gray-500">Total Cost</div>
-                          <div className="font-medium text-gray-900">₹{holding.totalCost.toLocaleString()}</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
+            <HoldingsList holdings={holdingsData} />
           </div>
         )}
         {/* Watchlist Section */}
         {activeTab === 'watchlist' && (
           <div className="bg-white rounded-xl shadow p-8 mt-8">
-            {watchlistData.length === 0 ? (
-              <div className="flex flex-col items-center justify-center min-h-[400px]">
-                <div className="mb-6">
-                  <div className="w-32 h-32 rounded-full bg-gray-100 flex items-center justify-center mx-auto">
-                    <span className="text-5xl text-gray-300 font-bold">👀</span>
-                  </div>
-                </div>
-                <h2 className="text-2xl font-semibold mb-2 text-gray-800">No stocks in watchlist</h2>
-                <p className="text-gray-500 mb-6">Add stocks to your watchlist to track them here</p>
-                <button className="px-6 py-2 bg-[#001f3f] text-white rounded-lg font-semibold hover:bg-[#001a33] transition">Add to Watchlist</button>
-              </div>
-            ) : (
-              <div className="space-y-4">
-                <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-xl font-semibold text-gray-800">Your Watchlist</h3>
-                  <div className="text-sm text-gray-500">
-                    {watchlistData.length} stock{watchlistData.length !== 1 ? 's' : ''}
-                  </div>
-                </div>
-                {watchlistData.map((item) => (
-                  <div key={item.id} className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-md transition-shadow">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-4">
-                        <div className={`w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-lg ${getColorForSymbol(item.stock_symbol)}`}>
-                          {item.stock_symbol.slice(0,2).toUpperCase()}
-                        </div>
-                        <div>
-                          <div className="font-semibold text-gray-900 text-lg">{item.stock_symbol}</div>
-                          <div className="text-sm text-gray-500">Added {new Date(item.added_at).toLocaleDateString()}</div>
-                        </div>
-                      </div>
-                      <div className="flex items-center space-x-4">
-                        <div className="text-right">
-                          <div className="font-semibold text-gray-900 text-lg">₹{item.currentPrice.toLocaleString()}</div>
-                          <div className="text-sm text-gray-500">Current Price</div>
-                        </div>
-                        <button 
-                          onClick={() => removeFromWatchlist(item.stock_symbol)} 
-                          className="px-4 py-2 text-red-600 hover:text-red-800 font-medium hover:bg-red-50 rounded-lg transition-colors"
-                        >
-                          Remove
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
+            <WatchlistList 
+              watchlist={watchlistData} 
+              onRemoveFromWatchlist={removeFromWatchlist}
+            />
           </div>
         )}
       </div>
