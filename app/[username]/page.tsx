@@ -2,9 +2,9 @@
 import { useMe } from '@/hooks/useMe';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { fetchOhlcv } from '@/utils/fetchOhlcv';
-import { FaUserCircle, FaCog, FaClipboardList, FaHeadset, FaFileAlt, FaSun } from 'react-icons/fa';
+
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 
@@ -49,11 +49,7 @@ function getColorForSymbol(symbol: string) {
   return colors[hash % colors.length];
 }
 
-function maskEmail(email: string) {
-  const [name, domain] = email.split('@');
-  if (name.length <= 2) return email;
-  return name[0] + '*'.repeat(name.length - 2) + name[name.length - 1] + '@' + domain;
-}
+
 
 export default function UserPage() {
   const { user, isLoading } = useMe();
@@ -150,7 +146,7 @@ export default function UserPage() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [showProfileDropdown]);
 
-  const fetchCurrentPrices = async () => {
+  const fetchCurrentPrices = useCallback(async () => {
     try {
       const allSymbols = [
         ...holdings.map(h => h.stock_symbol),
@@ -205,7 +201,7 @@ export default function UserPage() {
     } catch {
       console.error('Error fetching current prices');
     }
-  };
+  }, [holdings, watchlist]);
 
   const removeFromWatchlist = async (symbol: string) => {
     // Mock removal - just filter out the item
