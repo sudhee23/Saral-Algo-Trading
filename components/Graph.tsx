@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import { useChart, Ohlcv } from "@/hooks/useChart";
-import { fetchOhlcv } from "@/utils/fetchOhlcv";
+import { useChart } from "@/hooks/useChart";
+import { fetchOhlcv, Ohlcv } from "@/utils/fetchOhlcv";
 
 type GraphData = {
   initialTicker: string;

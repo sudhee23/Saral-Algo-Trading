@@ -10,12 +10,8 @@ import {
   TickMarkType,
   LineSeries,
   CandlestickSeries,
-  CandlestickData,
 } from "lightweight-charts";
-
-export interface Ohlcv extends CandlestickData<Time> {
-  volume: number;
-}
+import { Ohlcv } from "@/utils/fetchOhlcv";
 
 type ChartType = "candlestick" | "line" | "volume";
 
