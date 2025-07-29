@@ -26,7 +26,7 @@ export interface StockQuote {
   fiftyTwoWeekHigh: number;
   fiftyTwoWeekChangePercent?: number;
 }
-export async function GET(req: Request, { params }: { params: { ticker: string } }) {
+export async function GET(req: Request, { params }: { params: Promise<{ ticker: string }>}) {
   // @ts-expect-error: getRequestContext is not defined in the current context
   const fetchUrl=`${getRequestContext().env.HONO_BACKEND_URL}/quote/ticker/${params.ticker}`
   const res = await fetch(fetchUrl, {

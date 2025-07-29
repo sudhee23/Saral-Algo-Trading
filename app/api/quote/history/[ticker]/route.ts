@@ -1,7 +1,7 @@
 import { getRequestContext } from "@cloudflare/next-on-pages";
 
 export const runtime = 'edge';
-export async function GET(req: Request, { params }: { params: { ticker: string } }) {
+export async function GET(req: Request, { params }: { params: Promise<{ ticker: string }>}) {
   // async access the ticker from params
   const { ticker } = await params;
   const { searchParams } = new URL(req.url); // Extract query params (start, end)
@@ -30,7 +30,7 @@ export async function GET(req: Request, { params }: { params: { ticker: string }
   });
   if (!res.ok) {
     console.error(`Failed to fetch data for ${ticker}: ${res.statusText}`);
-    throw new Error(`Failed to fetch data for ${params.ticker}`);
+    throw new Error(`Failed to fetch data for ${ticker}`);
   }
   
   const data = await res.json();
