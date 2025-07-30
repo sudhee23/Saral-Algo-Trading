@@ -2,7 +2,7 @@ import { Hono } from 'hono';
 import yahooFinance from 'yahoo-finance2';
 
 const quote = new Hono();
-const TIMEOUT_MS = 4000;
+const TIMEOUT_MS = 8000;
 
 function withTimeout<T>(promise: Promise<T>, timeoutMs: number): Promise<T> {
   return Promise.race([
@@ -14,12 +14,13 @@ function withTimeout<T>(promise: Promise<T>, timeoutMs: number): Promise<T> {
 }
 
 quote.get('/ticker/:symbol', async (c) => {
-  const symbol = c.req.param('symbol');
-  if (!symbol) {
+  const symbolsParam = c.req.param('symbol');
+  if (!symbolsParam) {
     return c.json({ error: 'Symbol is required' }, 400);
   }
   try {
-    const result = await withTimeout(yahooFinance.quote(symbol), TIMEOUT_MS);
+    const symbols = symbolsParam.split(',').map((s) => s.trim().toUpperCase());
+    const result = await withTimeout(yahooFinance.quote(symbols), TIMEOUT_MS);
     return c.json(result);
   } catch (error: unknown) {
     console.error('Error fetching quote:', error);

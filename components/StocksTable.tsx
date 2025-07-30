@@ -16,25 +16,21 @@ export default function StocksTable() {
     // List of sector along with current value and change percentage using fetchOhlcv
     const [sectorData, setSectorData] = useState<{ sector: string; ticker: string; value: number; change: number }[]>([]);
     useEffect(() => {
-const fetchData = async () => {
-        const data = await Promise.all(
-            Object.entries(SECTOR_TICKERS).map(async ([sector, ticker]) => {
-                try {
-                    const quote: StockQuote = await fetchquote(ticker);
-                    if (!quote) return null;
-
-                    const change = ((quote.regularMarketPrice - quote.regularMarketOpen) / quote.regularMarketOpen) * 100;
-
-                    return { sector, ticker, value: quote.regularMarketPrice, change };
-                } catch (error) {
-                    console.error(`Error fetching data for ${ticker}:`, error);
-                    return null;
+        const fetchData = async () => {
+            const tickers = Object.values(SECTOR_TICKERS);
+            const quotes: StockQuote[] = await fetchquote(tickers);
+            const data = Object.entries(SECTOR_TICKERS).map(([sector, ticker]) => {
+                const quote = quotes.find(q => q.symbol === ticker);
+                if (quote) {
+                    const value = quote.regularMarketPrice || 0;
+                    const change = (quote.regularMarketPrice - quote.regularMarketOpen) / quote.regularMarketOpen * 100 || 0;
+                    return { sector, ticker, value, change };
                 }
-            })
-        );
-        setSectorData(data.filter(Boolean) as { sector: string; ticker: string; value: number; change: number }[]);
-    };
-    fetchData();
+                return null;
+            });
+            setSectorData(data.filter(Boolean) as { sector: string; ticker: string; value: number; change: number }[]);
+        };
+        fetchData();
     }, []);
     return (
         <div className="w-full h-full p-4 bg-gray-900 text-white rounded-lg">

@@ -17,13 +17,11 @@ export async function fetchOhlcv(ticker: string): Promise<Ohlcv[]> {
   const json: Ohlcv[]= await res.json();
   return json ?? [];
 }
-export async function fetchquote(ticker:string):Promise<StockQuote>{
-  const res = await fetch(`api/quote/ticker/${ticker}`, { cache: 'no-store' });
-
+export async function fetchquote(tickers:string[]):Promise<StockQuote[]>{
+  const res = await fetch(`api/quote/ticker/${tickers.join(',')}`, { cache: 'no-store' });
   if (!res.ok) {
-    throw new Error(`Failed to fetch quote for ${ticker}`);
+    throw new Error(`Failed to fetch quote for ${tickers.join(', ')}`);
   }
-
-  const json: StockQuote = await res.json();
+  const json: StockQuote[] = await res.json();
   return json;
 }
