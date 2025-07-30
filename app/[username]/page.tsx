@@ -43,10 +43,6 @@ const TABS = [
   { key: 'watchlist', label: 'Watchlist' },
 ];
 
-
-
-
-
 export default function UserPage() {
   const { user, isLoading } = useMe();
   const params = useParams();
@@ -59,6 +55,12 @@ export default function UserPage() {
   const [activeTab, setActiveTab] = useState<'holdings' | 'watchlist'>('holdings');
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const profileDropdownRef = useRef<HTMLDivElement>(null);
+  
+  // New state for amount request modals
+  const [showAddAmountModal, setShowAddAmountModal] = useState(false);
+  const [showWithdrawAmountModal, setShowWithdrawAmountModal] = useState(false);
+  const [addAmount, setAddAmount] = useState('');
+  const [withdrawAmount, setWithdrawAmount] = useState('');
 
   // Redirect if logged in user does not match route username
   useEffect(() => {
@@ -205,6 +207,41 @@ export default function UserPage() {
     setWatchlistData(prev => prev.filter(item => item.stock_symbol !== symbol));
   };
 
+  // New functions for handling amount requests
+  const handleAddAmountRequest = async () => {
+    if (!addAmount || parseFloat(addAmount) <= 0) {
+      alert('Please enter a valid amount');
+      return;
+    }
+    
+    try {
+      // Here you would typically make an API call to submit the request
+      console.log('Add amount request:', addAmount);
+      alert(`Add amount request of ₹${addAmount} submitted successfully!`);
+      setAddAmount('');
+      setShowAddAmountModal(false);
+    } catch (error) {
+      alert('Failed to submit add amount request');
+    }
+  };
+
+  const handleWithdrawAmountRequest = async () => {
+    if (!withdrawAmount || parseFloat(withdrawAmount) <= 0) {
+      alert('Please enter a valid amount');
+      return;
+    }
+    
+    try {
+      // Here you would typically make an API call to submit the request
+      console.log('Withdraw amount request:', withdrawAmount);
+      alert(`Withdraw amount request of ₹${withdrawAmount} submitted successfully!`);
+      setWithdrawAmount('');
+      setShowWithdrawAmountModal(false);
+    } catch (error) {
+      alert('Failed to submit withdraw amount request');
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -290,6 +327,27 @@ export default function UserPage() {
         {/* Holdings/Watchlist Tabs and Content */}
         {activeTab === 'holdings' && (
           <div className="bg-white rounded-xl shadow p-8 mt-8">
+            {/* Add Amount Request and Withdraw Amount Request Buttons */}
+            <div className="flex gap-4 mb-6">
+              <button
+                onClick={() => setShowAddAmountModal(true)}
+                className="flex items-center gap-2 px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors font-medium"
+              >
+                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                </svg>
+                Add Amount Request
+              </button>
+              <button
+                onClick={() => setShowWithdrawAmountModal(true)}
+                className="flex items-center gap-2 px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors font-medium"
+              >
+                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 12H4"/>
+                </svg>
+                Withdraw Amount Request
+              </button>
+            </div>
             <HoldingsList holdings={holdingsData} />
           </div>
         )}
@@ -303,6 +361,101 @@ export default function UserPage() {
           </div>
         )}
       </div>
+
+      {/* Add Amount Request Modal */}
+      {showAddAmountModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 w-96 max-w-md">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-gray-900">Add Amount Request</h3>
+              <button
+                onClick={() => setShowAddAmountModal(false)}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+              </button>
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Amount to Add (₹)
+              </label>
+              <input
+                type="number"
+                value={addAmount}
+                onChange={(e) => setAddAmount(e.target.value)}
+                placeholder="Enter amount"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                min="1"
+                step="0.01"
+              />
+            </div>
+            <div className="flex gap-3">
+              <button
+                onClick={handleAddAmountRequest}
+                className="flex-1 bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 transition-colors"
+              >
+                Submit Request
+              </button>
+              <button
+                onClick={() => setShowAddAmountModal(false)}
+                className="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-400 transition-colors"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Withdraw Amount Request Modal */}
+      {showWithdrawAmountModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 w-96 max-w-md">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-gray-900">Withdraw Amount Request</h3>
+              <button
+                onClick={() => setShowWithdrawAmountModal(false)}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+              </button>
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Amount to Withdraw (₹)
+              </label>
+              <input
+                type="number"
+                value={withdrawAmount}
+                onChange={(e) => setWithdrawAmount(e.target.value)}
+                placeholder="Enter amount"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                min="1"
+                step="0.01"
+              />
+            </div>
+            <div className="flex gap-3">
+              <button
+                onClick={handleWithdrawAmountRequest}
+                className="flex-1 bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600 transition-colors"
+              >
+                Submit Request
+              </button>
+              <button
+                onClick={() => setShowWithdrawAmountModal(false)}
+                className="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-400 transition-colors"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <Footer />
     </div>
   );
