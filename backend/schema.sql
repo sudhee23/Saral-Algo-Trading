@@ -4,3 +4,11 @@ CREATE TABLE IF NOT EXISTS users (
   password TEXT NOT NULL,
   role TEXT NOT NULL CHECK (role IN ('ADMIN', 'USER'))
 );
+CREATE TABLE IF NOT EXISTS portfolios (
+  id TEXT PRIMARY KEY,
+  user_id TEXT NOT NULL,
+  symbol TEXT NOT NULL,
+  quantity REAL NOT NULL,
+  average_price REAL,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);

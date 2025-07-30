@@ -1,5 +1,6 @@
 name = "algo-trading-backend"
-main = "index.ts"  
+main = "index.ts"
+compatibility_flags = ["nodejs_compat"]
 compatibility_date = "2025-07-01"
 
 [vars]

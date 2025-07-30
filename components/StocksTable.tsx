@@ -1,6 +1,7 @@
 'use client';
 
-import { fetchOhlcv } from "@/utils/fetchOhlcv";
+import { StockQuote } from "@/app/api/quote/ticker/[ticker]/route";
+import { fetchquote } from "@/utils/fetchOhlcv";
 import { useState, useEffect } from "react";
 
 // Move SECTOR_TICKERS outside the component
@@ -16,15 +17,17 @@ export default function StocksTable() {
     const [sectorData, setSectorData] = useState<{ sector: string; ticker: string; value: number; change: number }[]>([]);
     useEffect(() => {
         const fetchData = async () => {
-            const data = await Promise.all(
-                Object.entries(SECTOR_TICKERS).map(async ([sector, ticker]) => {
-                    const ohlcv = await fetchOhlcv(ticker);
-                    if (ohlcv.length === 0) return null;
-                    const last = ohlcv[ohlcv.length - 1];
-                    const change = ((last.close - last.open) / last.open) * 100;
-                    return { sector, ticker, value: last.close, change };
-                })
-            );
+            const tickers = Object.values(SECTOR_TICKERS);
+            const quotes: StockQuote[] = await fetchquote(tickers);
+            const data = Object.entries(SECTOR_TICKERS).map(([sector, ticker]) => {
+                const quote = quotes.find(q => q.symbol === ticker);
+                if (quote) {
+                    const value = quote.regularMarketPrice || 0;
+                    const change = (quote.regularMarketPrice - quote.regularMarketOpen) / quote.regularMarketOpen * 100 || 0;
+                    return { sector, ticker, value, change };
+                }
+                return null;
+            });
             setSectorData(data.filter(Boolean) as { sector: string; ticker: string; value: number; change: number }[]);
         };
         fetchData();
