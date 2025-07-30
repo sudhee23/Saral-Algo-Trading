@@ -123,27 +123,6 @@ export default function UserPage() {
     }
   }, [user]);
 
-  // Fetch current prices for holdings and watchlist
-  useEffect(() => {
-    if (holdings.length > 0 || watchlist.length > 0) {
-      fetchCurrentPrices();
-    }
-  }, [holdings, watchlist]);
-
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (profileDropdownRef.current && !profileDropdownRef.current.contains(event.target as Node)) {
-        setShowProfileDropdown(false);
-      }
-    }
-    if (showProfileDropdown) {
-      document.addEventListener('mousedown', handleClickOutside);
-    } else {
-      document.removeEventListener('mousedown', handleClickOutside);
-    }
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [showProfileDropdown]);
-
   const fetchCurrentPrices = useCallback(async () => {
     try {
       const allSymbols = [
@@ -201,6 +180,27 @@ export default function UserPage() {
     }
   }, [holdings, watchlist]);
 
+  // Fetch current prices for holdings and watchlist
+  useEffect(() => {
+    if (holdings.length > 0 || watchlist.length > 0) {
+      fetchCurrentPrices();
+    }
+  }, [holdings, watchlist, fetchCurrentPrices]);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (profileDropdownRef.current && !profileDropdownRef.current.contains(event.target as Node)) {
+        setShowProfileDropdown(false);
+      }
+    }
+    if (showProfileDropdown) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [showProfileDropdown]);
+
   const removeFromWatchlist = async (symbol: string) => {
     // Mock removal - just filter out the item
     setWatchlist(prev => prev.filter(item => item.stock_symbol !== symbol));
@@ -220,7 +220,7 @@ export default function UserPage() {
       alert(`Add amount request of ₹${addAmount} submitted successfully!`);
       setAddAmount('');
       setShowAddAmountModal(false);
-    } catch (error) {
+    } catch {
       alert('Failed to submit add amount request');
     }
   };
@@ -237,7 +237,7 @@ export default function UserPage() {
       alert(`Withdraw amount request of ₹${withdrawAmount} submitted successfully!`);
       setWithdrawAmount('');
       setShowWithdrawAmountModal(false);
-    } catch (error) {
+    } catch {
       alert('Failed to submit withdraw amount request');
     }
   };
@@ -459,4 +459,4 @@ export default function UserPage() {
       <Footer />
     </div>
   );
-}
+} 
