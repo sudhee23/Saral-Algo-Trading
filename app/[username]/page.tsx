@@ -324,30 +324,40 @@ export default function UserPage() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Holdings/Watchlist Tabs and Content */}
-        {activeTab === 'holdings' && (
-          <div className="bg-white rounded-xl shadow p-8 mt-8">
-            {/* Add Amount Request and Withdraw Amount Request Buttons */}
-            <div className="flex gap-4 mb-6">
+        {/* Groww-style Account Balance Card */}
+        <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl p-6 mb-6 text-white">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-lg font-medium opacity-90">Available Balance</h3>
+              <p className="text-3xl font-bold">₹25,000.00</p>
+              <p className="text-sm opacity-75 mt-1">Last updated: Just now</p>
+            </div>
+            <div className="flex gap-3">
               <button
                 onClick={() => setShowAddAmountModal(true)}
-                className="flex items-center gap-2 px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors font-medium"
+                className="flex items-center gap-2 px-4 py-2 bg-white bg-opacity-20 text-white rounded-lg hover:bg-opacity-30 transition-colors font-medium text-sm"
               >
-                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
                 </svg>
-                Add Amount Request
+                Add Money
               </button>
               <button
                 onClick={() => setShowWithdrawAmountModal(true)}
-                className="flex items-center gap-2 px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors font-medium"
+                className="flex items-center gap-2 px-4 py-2 bg-white bg-opacity-20 text-white rounded-lg hover:bg-opacity-30 transition-colors font-medium text-sm"
               >
-                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 12H4"/>
                 </svg>
-                Withdraw Amount Request
+                Withdraw
               </button>
             </div>
+          </div>
+        </div>
+
+        {/* Holdings/Watchlist Tabs and Content */}
+        {activeTab === 'holdings' && (
+          <div className="bg-white rounded-xl shadow p-8 mt-8">
             <HoldingsList holdings={holdingsData} />
           </div>
         )}
