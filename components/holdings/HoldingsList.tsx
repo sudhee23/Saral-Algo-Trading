@@ -17,9 +17,10 @@ import HoldingsCard from './HoldingsCard';
 
 interface HoldingsListProps {
   holdings: HoldingWithPrice[];
+  onWithdraw?: (symbol: string, amount: number) => Promise<void>;
 }
 
-export default function HoldingsList({ holdings }: HoldingsListProps) {
+export default function HoldingsList({ holdings, onWithdraw }: HoldingsListProps) {
   if (holdings.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px]">
@@ -46,7 +47,7 @@ export default function HoldingsList({ holdings }: HoldingsListProps) {
         </div>
       </div>
       {holdings.map((holding) => (
-        <HoldingsCard key={holding.id} holding={holding} />
+        <HoldingsCard key={holding.id} holding={holding} onWithdraw={onWithdraw} />
       ))}
     </div>
   );

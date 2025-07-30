@@ -15,6 +15,7 @@ interface HoldingWithPrice {
 
 interface HoldingsCardProps {
   holding: HoldingWithPrice;
+  onWithdraw?: (symbol: string, amount: number) => Promise<void>;
 }
 
 function getColorForSymbol(symbol: string) {
@@ -24,7 +25,13 @@ function getColorForSymbol(symbol: string) {
   return colors[hash % colors.length];
 }
 
-export default function HoldingsCard({ holding }: HoldingsCardProps) {
+export default function HoldingsCard({ holding, onWithdraw }: HoldingsCardProps) {
+  const handleWithdraw = () => {
+    if (onWithdraw) {
+      onWithdraw(holding.stock_symbol, holding.totalValue);
+    }
+  };
+
   return (
     <div className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-md transition-shadow">
       <div className="flex items-center justify-between">
@@ -58,6 +65,17 @@ export default function HoldingsCard({ holding }: HoldingsCardProps) {
             <div className="text-gray-500">Total Cost</div>
             <div className="font-medium text-gray-900">₹{holding.totalCost.toLocaleString()}</div>
           </div>
+        </div>
+        <div className="mt-4 flex justify-end">
+          <button
+            onClick={handleWithdraw}
+            className="flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors font-medium text-sm"
+          >
+            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 12H4"/>
+            </svg>
+            Withdraw from {holding.stock_symbol}
+          </button>
         </div>
       </div>
     </div>
