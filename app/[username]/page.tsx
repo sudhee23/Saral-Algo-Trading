@@ -332,26 +332,26 @@ export default function UserPage() {
               <p className="text-3xl font-bold">₹25,000.00</p>
               <p className="text-sm opacity-75 mt-1">Last updated: Just now</p>
             </div>
-            <div className="flex gap-3">
-              <button
-                onClick={() => setShowAddAmountModal(true)}
-                className="flex items-center gap-2 px-4 py-2 bg-white bg-opacity-20 text-white rounded-lg hover:bg-opacity-30 transition-colors font-medium text-sm"
-              >
-                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
-                </svg>
-                Add Money
-              </button>
-              <button
-                onClick={() => setShowWithdrawAmountModal(true)}
-                className="flex items-center gap-2 px-4 py-2 bg-white bg-opacity-20 text-white rounded-lg hover:bg-opacity-30 transition-colors font-medium text-sm"
-              >
-                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 12H4"/>
-                </svg>
-                Withdraw
-              </button>
-            </div>
+                          <div className="flex gap-3">
+                <button
+                  onClick={() => setShowAddAmountModal(true)}
+                  className="flex items-center gap-2 px-4 py-2 bg-white text-blue-600 rounded-lg hover:bg-gray-100 transition-colors font-medium text-sm"
+                >
+                  <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                  </svg>
+                  Add Money
+                </button>
+                <button
+                  onClick={() => setShowWithdrawAmountModal(true)}
+                  className="flex items-center gap-2 px-4 py-2 bg-white text-blue-600 rounded-lg hover:bg-gray-100 transition-colors font-medium text-sm"
+                >
+                  <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 12H4"/>
+                  </svg>
+                  Withdraw
+                </button>
+              </div>
           </div>
         </div>
 
