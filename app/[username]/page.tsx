@@ -242,6 +242,16 @@ export default function UserPage() {
     }
   };
 
+  const handleWithdrawFromStock = async (symbol: string, amount: number) => {
+    try {
+      // Here you would typically make an API call to submit the request
+      console.log('Withdraw from stock request:', symbol, amount);
+      alert(`Withdraw request of ₹${amount.toLocaleString()} from ${symbol} submitted successfully!`);
+    } catch {
+      alert('Failed to submit withdraw request');
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -342,15 +352,6 @@ export default function UserPage() {
                   </svg>
                   Add Money
                 </button>
-                <button
-                  onClick={() => setShowWithdrawAmountModal(true)}
-                  className="flex items-center gap-2 px-4 py-2 bg-white text-blue-600 rounded-lg hover:bg-gray-100 transition-colors font-medium text-sm"
-                >
-                  <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 12H4"/>
-                  </svg>
-                  Withdraw
-                </button>
               </div>
           </div>
         </div>
@@ -358,7 +359,7 @@ export default function UserPage() {
         {/* Holdings/Watchlist Tabs and Content */}
         {activeTab === 'holdings' && (
           <div className="bg-white rounded-xl shadow p-8 mt-8">
-            <HoldingsList holdings={holdingsData} />
+            <HoldingsList holdings={holdingsData} onWithdraw={handleWithdrawFromStock} />
           </div>
         )}
         {/* Watchlist Section */}
