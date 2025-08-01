@@ -80,12 +80,7 @@ export default function StockDetailPage() {
   // Initialize chart
   useEffect(() => {
     if (chartContainerRef.current && chartData.length > 0) {
-      const chart = useChart(chartContainerRef, chartData, chartType);
-      return () => {
-        if (chart) {
-          chart.remove();
-        }
-      };
+      useChart(chartContainerRef, chartData, chartType);
     }
   }, [chartData, chartType]);
 
