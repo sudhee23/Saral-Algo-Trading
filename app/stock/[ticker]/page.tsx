@@ -7,6 +7,20 @@ import { fetchOhlcv, fetchTicker, Ohlcv } from '@/utils/fetchOhlcv';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 
+// Separate component for chart to avoid hook rules violation
+function ChartComponent({ 
+  containerRef, 
+  data, 
+  chartType 
+}: { 
+  containerRef: React.RefObject<HTMLDivElement | null>;
+  data: Ohlcv[];
+  chartType: 'candlestick' | 'line' | 'volume';
+}) {
+  useChart(containerRef, data, chartType);
+  return null;
+}
+
 interface StockDetail {
   symbol: string;
   shortName: string;
@@ -76,9 +90,6 @@ export default function StockDetailPage() {
       fetchChartData();
     }
   }, [ticker, timeframe]);
-
-  // Initialize chart
-  useChart(chartContainerRef, chartData, chartType);
 
   if (loading) {
     return (
@@ -203,9 +214,16 @@ export default function StockDetailPage() {
             </div>
           </div>
           
-          <div className="w-full h-96 bg-black rounded-md overflow-hidden">
-            <div ref={chartContainerRef} className="w-full h-full" />
-          </div>
+                     <div className="w-full h-96 bg-black rounded-md overflow-hidden">
+             <div ref={chartContainerRef} className="w-full h-full" />
+             {chartData.length > 0 && (
+               <ChartComponent 
+                 containerRef={chartContainerRef}
+                 data={chartData}
+                 chartType={chartType}
+               />
+             )}
+           </div>
         </div>
 
         {/* Detailed Information */}
