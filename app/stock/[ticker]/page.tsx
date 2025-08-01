@@ -3,7 +3,7 @@
 import { useParams } from 'next/navigation';
 import { useEffect, useState, useRef } from 'react';
 import { useChart } from '@/hooks/useChart';
-import { fetchOhlcv, fetchTicker } from '@/utils/fetchOhlcv';
+import { fetchOhlcv, fetchTicker, Ohlcv } from '@/utils/fetchOhlcv';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 
@@ -35,7 +35,7 @@ export default function StockDetailPage() {
   const chartContainerRef = useRef<HTMLDivElement | null>(null);
   
   const [stockData, setStockData] = useState<StockDetail | null>(null);
-  const [chartData, setChartData] = useState<any[]>([]);
+  const [chartData, setChartData] = useState<Ohlcv[]>([]);
   const [chartType, setChartType] = useState<'candlestick' | 'line' | 'volume'>('candlestick');
   const [timeframe, setTimeframe] = useState<'1d' | '5d' | '1mo' | '3mo' | '6mo' | '1y'>('1d');
   const [loading, setLoading] = useState(true);
@@ -80,7 +80,12 @@ export default function StockDetailPage() {
   // Initialize chart
   useEffect(() => {
     if (chartContainerRef.current && chartData.length > 0) {
-      useChart(chartContainerRef, chartData, chartType);
+      const chart = useChart(chartContainerRef, chartData, chartType);
+      return () => {
+        if (chart) {
+          chart.remove();
+        }
+      };
     }
   }, [chartData, chartType]);
 
@@ -177,11 +182,11 @@ export default function StockDetailPage() {
             <h2 className="text-xl font-semibold">Price Chart</h2>
             <div className="flex items-center gap-2">
               {/* Timeframe Selector */}
-              <select
-                value={timeframe}
-                onChange={(e) => setTimeframe(e.target.value as any)}
-                className="px-3 py-1 border border-gray-300 rounded-md text-sm"
-              >
+                             <select
+                 value={timeframe}
+                 onChange={(e) => setTimeframe(e.target.value as '1d' | '5d' | '1mo' | '3mo' | '6mo' | '1y')}
+                 className="px-3 py-1 border border-gray-300 rounded-md text-sm"
+               >
                 <option value="1d">1D</option>
                 <option value="5d">5D</option>
                 <option value="1mo">1M</option>
