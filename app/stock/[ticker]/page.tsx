@@ -78,11 +78,7 @@ export default function StockDetailPage() {
   }, [ticker, timeframe]);
 
   // Initialize chart
-  useEffect(() => {
-    if (chartContainerRef.current && chartData.length > 0) {
-      useChart(chartContainerRef, chartData, chartType);
-    }
-  }, [chartData, chartType]);
+  useChart(chartContainerRef, chartData, chartType);
 
   if (loading) {
     return (
