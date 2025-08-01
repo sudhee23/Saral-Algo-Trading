@@ -18,7 +18,7 @@ export default function Graph({ initialTicker }: GraphData) {
   }, [ticker]); 
   useChart(chartContainerRef, data, chartType); // this does chart creation logic
 
-  const TICKERS = ["RELIANCE.NS", "MARUTI.NS", "TCS.NS"];
+  const TICKERS = ["AAPL", "GOOGL", "MSFT"];
 
   return (
     <div className="mb-8 w-full h-full">

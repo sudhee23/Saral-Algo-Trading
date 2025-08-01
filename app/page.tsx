@@ -11,7 +11,7 @@ export default async function Home() {
       <main className="p-6 flex-1">
         <div className="flex flex-col lg:flex-row gap-6">
           <div className="w-full lg:w-2/3">
-            <Graph initialTicker={"RELIANCE.NS"} />
+            <Graph initialTicker={"AAPL"} />
           </div>
           <div className="w-full lg:w-1/3">
             <StocksTable />

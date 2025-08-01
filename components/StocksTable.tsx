@@ -58,7 +58,7 @@ export default function StocksTable() {
             </table>
             <h2 className="text-xl font-semibold mt-6 mb-4">Recommended Stocks</h2>
             <div className="space-y-2">
-              {['RELIANCE.NS', 'TCS.NS', 'INFY.NS', 'HDBANK.NS', 'MARUTI.NS'].map((stock) => (
+              {['AAPL', 'GOOGL', 'MSFT', 'TSLA', 'AMZN'].map((stock) => (
                 <Link 
                   key={stock} 
                   href={`/stock/${stock}`}
