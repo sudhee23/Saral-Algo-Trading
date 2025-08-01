@@ -2,6 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useChart } from "@/hooks/useChart";
 import { fetchOhlcv, Ohlcv } from "@/utils/fetchOhlcv";
+import Link from "next/link";
 
 type GraphData = {
   initialTicker: string;
@@ -34,6 +35,12 @@ export default function Graph({ initialTicker }: GraphData) {
               </option>
             ))}
           </select>
+          <Link
+            href={`/stock/${ticker}`}
+            className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition text-sm"
+          >
+            View Details
+          </Link>
           {["candlestick", "line", "volume"].map((type) => (
             <button
               key={type}
