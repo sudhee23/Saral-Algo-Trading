@@ -50,17 +50,6 @@ function getSector(symbol: string) {
   return sectors[symbol] || 'Others';
 }
 
-// Mini chart data for visual representation
-function getMiniChartData(pnlPercent: number) {
-  const points = [];
-  const baseValue = 100;
-  for (let i = 0; i < 20; i++) {
-    const variation = (Math.random() - 0.5) * 10;
-    points.push(baseValue + variation + (pnlPercent / 10));
-  }
-  return points;
-}
-
 export default function HoldingsCard({ holding, onWithdraw }: HoldingsCardProps) {
   const [showWithdrawModal, setShowWithdrawModal] = useState(false);
   const [sharesToWithdraw, setSharesToWithdraw] = useState('');
@@ -101,10 +90,6 @@ export default function HoldingsCard({ holding, onWithdraw }: HoldingsCardProps)
     }
   };
 
-  const chartData = getMiniChartData(holding.pnlPercent);
-  const maxChartValue = Math.max(...chartData);
-  const minChartValue = Math.min(...chartData);
-
   return (
     <>
       <div className="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-lg transition-all duration-200">
@@ -128,22 +113,6 @@ export default function HoldingsCard({ holding, onWithdraw }: HoldingsCardProps)
             <div className={`text-sm font-medium ${holding.pnl >= 0 ? 'text-green-600' : 'text-red-600'}`}>
               {holding.pnl >= 0 ? '+' : ''}₹{holding.pnl.toLocaleString()} ({holding.pnlPercent.toFixed(2)}%)
             </div>
-          </div>
-        </div>
-
-        {/* Mini Chart */}
-        <div className="mb-3">
-          <div className="w-full h-8 bg-gray-50 rounded-lg p-1">
-            <svg width="100%" height="100%" viewBox="0 0 100 24" className="overflow-visible">
-              <polyline
-                fill="none"
-                stroke={holding.pnl >= 0 ? "#10B981" : "#EF4444"}
-                strokeWidth="1.5"
-                points={chartData.map((value, index) => 
-                  `${(index / (chartData.length - 1)) * 100},${24 - ((value - minChartValue) / (maxChartValue - minChartValue)) * 20}`
-                ).join(' ')}
-              />
-            </svg>
           </div>
         </div>
 
