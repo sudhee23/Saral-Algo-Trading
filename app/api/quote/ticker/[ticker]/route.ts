@@ -1,4 +1,4 @@
-import { getRequestContext } from "@cloudflare/next-on-pages";
+
 
 export const runtime = 'edge';
 export interface StockQuote {
