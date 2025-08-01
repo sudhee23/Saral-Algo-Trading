@@ -26,4 +26,11 @@ export async function fetchquote(tickers:string[]):Promise<StockQuote[]>{
   return json;
 }
 
-
+export async function fetchTicker(ticker: string): Promise<StockQuote> {
+  const res = await fetch(`api/quote/ticker/${ticker}`, { cache: 'no-store' });
+  if (!res.ok) {
+    throw new Error(`Failed to fetch ticker data for ${ticker}`);
+  }
+  const json: StockQuote = await res.json();
+  return json;
+}
