@@ -242,11 +242,11 @@ export default function UserPage() {
     }
   };
 
-  const handleWithdrawFromStock = async (symbol: string, amount: number) => {
+  const handleWithdrawFromStock = async (symbol: string, shares: number, amount: number) => {
     try {
       // Here you would typically make an API call to submit the request
-      console.log('Withdraw from stock request:', symbol, amount);
-      alert(`Withdraw request of ₹${amount.toLocaleString()} from ${symbol} submitted successfully!`);
+      console.log('Withdraw from stock request:', symbol, shares, amount);
+      alert(`Withdraw request of ${shares} shares (₹${amount.toLocaleString()}) from ${symbol} submitted successfully!`);
     } catch {
       alert('Failed to submit withdraw request');
     }

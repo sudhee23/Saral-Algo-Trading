@@ -17,7 +17,7 @@ import HoldingsCard from './HoldingsCard';
 
 interface HoldingsListProps {
   holdings: HoldingWithPrice[];
-  onWithdraw?: (symbol: string, amount: number) => Promise<void>;
+  onWithdraw?: (symbol: string, shares: number, amount: number) => Promise<void>;
 }
 
 export default function HoldingsList({ holdings, onWithdraw }: HoldingsListProps) {
