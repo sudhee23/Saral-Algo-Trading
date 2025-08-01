@@ -26,6 +26,18 @@ function getColorForSymbol(symbol: string) {
   return colors[hash % colors.length];
 }
 
+function getCompanyName(symbol: string) {
+  const companies: { [key: string]: string } = {
+    'RELIANCE': 'Reliance Industries Ltd.',
+    'TCS': 'Tata Consultancy Services Ltd.',
+    'INFY': 'Infosys Ltd.',
+    'HDFC': 'HDFC Bank Ltd.',
+    'WIPRO': 'Wipro Ltd.',
+    'TATAMOTORS': 'Tata Motors Ltd.'
+  };
+  return companies[symbol] || `${symbol} Ltd.`;
+}
+
 export default function HoldingsCard({ holding, onWithdraw }: HoldingsCardProps) {
   const [showWithdrawModal, setShowWithdrawModal] = useState(false);
   const [sharesToWithdraw, setSharesToWithdraw] = useState('');
@@ -68,15 +80,17 @@ export default function HoldingsCard({ holding, onWithdraw }: HoldingsCardProps)
 
   return (
     <>
-      <div className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-md transition-shadow">
-        <div className="flex items-center justify-between">
+      <div className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-all duration-200">
+        {/* Header with Logo and Company Info */}
+        <div className="flex items-center justify-between mb-4">
           <div className="flex items-center space-x-4">
-            <div className={`w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-lg ${getColorForSymbol(holding.stock_symbol)}`}>
+            <div className={`w-12 h-12 rounded-lg flex items-center justify-center text-white font-bold text-lg ${getColorForSymbol(holding.stock_symbol)}`}>
               {holding.stock_symbol.slice(0,2).toUpperCase()}
             </div>
             <div>
               <div className="font-semibold text-gray-900 text-lg">{holding.stock_symbol}</div>
-              <div className="text-sm text-gray-500">{holding.quantity} shares</div>
+              <div className="text-sm text-gray-500">{getCompanyName(holding.stock_symbol)}</div>
+              <div className="text-xs text-gray-400">NSE • {holding.quantity} units</div>
             </div>
           </div>
           <div className="text-right">
@@ -84,34 +98,50 @@ export default function HoldingsCard({ holding, onWithdraw }: HoldingsCardProps)
             <div className={`text-sm font-medium ${holding.pnl >= 0 ? 'text-green-600' : 'text-red-600'}`}>
               {holding.pnl >= 0 ? '+' : ''}₹{holding.pnl.toLocaleString()} ({holding.pnlPercent.toFixed(2)}%)
             </div>
+            <div className="text-xs text-gray-400">Today</div>
           </div>
         </div>
-        <div className="mt-4 pt-4 border-t border-gray-100">
-          <div className="grid grid-cols-3 gap-4 text-sm">
-            <div>
-              <div className="text-gray-500">Avg Price</div>
-              <div className="font-medium text-gray-900">₹{holding.avg_price.toLocaleString()}</div>
-            </div>
-            <div>
-              <div className="text-gray-500">Total Value</div>
-              <div className="font-medium text-gray-900">₹{holding.totalValue.toLocaleString()}</div>
-            </div>
-            <div>
-              <div className="text-gray-500">Total Cost</div>
-              <div className="font-medium text-gray-900">₹{holding.totalCost.toLocaleString()}</div>
-            </div>
+
+        {/* P&L Bar */}
+        <div className="mb-4">
+          <div className="w-full bg-gray-200 rounded-full h-2">
+            <div 
+              className={`h-2 rounded-full ${holding.pnl >= 0 ? 'bg-green-500' : 'bg-red-500'}`}
+              style={{ width: `${Math.min(Math.abs(holding.pnlPercent), 100)}%` }}
+            ></div>
           </div>
-          <div className="mt-4 flex justify-end">
-            <button
-              onClick={handleWithdrawClick}
-              className="flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors font-medium text-sm"
-            >
-              <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 12H4"/>
-              </svg>
-              Withdraw from {holding.stock_symbol}
-            </button>
+        </div>
+
+        {/* Holdings Details */}
+        <div className="grid grid-cols-3 gap-4 text-sm mb-4">
+          <div>
+            <div className="text-gray-500 text-xs">Avg Price</div>
+            <div className="font-medium text-gray-900">₹{holding.avg_price.toLocaleString()}</div>
           </div>
+          <div>
+            <div className="text-gray-500 text-xs">Total Value</div>
+            <div className="font-medium text-gray-900">₹{holding.totalValue.toLocaleString()}</div>
+          </div>
+          <div>
+            <div className="text-gray-500 text-xs">Total Cost</div>
+            <div className="font-medium text-gray-900">₹{holding.totalCost.toLocaleString()}</div>
+          </div>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="flex gap-3">
+          <button
+            onClick={handleWithdrawClick}
+            className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors font-medium text-sm"
+          >
+            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 12H4"/>
+            </svg>
+            Withdraw Units
+          </button>
+          <button className="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-medium text-sm">
+            View Details
+          </button>
         </div>
       </div>
 
@@ -133,19 +163,19 @@ export default function HoldingsCard({ holding, onWithdraw }: HoldingsCardProps)
             
             <div className="mb-4">
               <div className="text-sm text-gray-600 mb-2">
-                Available shares: {holding.quantity} | Current price: ₹{holding.currentPrice.toLocaleString()}
+                Available units: {holding.quantity} | Current price: ₹{holding.currentPrice.toLocaleString()}
               </div>
             </div>
 
             <div className="mb-4">
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Number of Shares
+                Number of Units
               </label>
               <input
                 type="number"
                 value={sharesToWithdraw}
                 onChange={handleSharesChange}
-                placeholder="Enter shares to withdraw"
+                placeholder="Enter units to withdraw"
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 min="1"
                 max={holding.quantity}
@@ -173,7 +203,7 @@ export default function HoldingsCard({ holding, onWithdraw }: HoldingsCardProps)
                 onClick={handleWithdrawSubmit}
                 className="flex-1 bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600 transition-colors"
               >
-                Withdraw Shares
+                Withdraw Units
               </button>
               <button
                 onClick={() => setShowWithdrawModal(false)}
