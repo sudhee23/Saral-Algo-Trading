@@ -7,6 +7,8 @@ import { fetchOhlcv, fetchTicker, Ohlcv } from '@/utils/fetchOhlcv';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 
+export const runtime = 'edge';
+
 // Separate component for chart to avoid hook rules violation
 function ChartComponent({ 
   containerRef, 
