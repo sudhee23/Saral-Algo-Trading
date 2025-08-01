@@ -6,6 +6,8 @@ import { fetchTicker } from '@/utils/fetchOhlcv';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 
+export const runtime = 'edge';
+
 interface StockDetail {
   symbol: string;
   shortName: string;
