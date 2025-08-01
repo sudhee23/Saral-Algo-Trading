@@ -28,23 +28,39 @@ export interface StockQuote {
   fiftyTwoWeekChangePercent?: number;
 }
 export async function GET(req: Request, { params }: { params: Promise<{ ticker: string }>}) {
-  const resolvedParams = await params;
-  const fetchUrl = `https://algo-trading-backend.saral-automations.workers.dev/quote/ticker/${resolvedParams.ticker}`;
-  const res = await fetch(fetchUrl, {
-    method: 'GET',
-    headers: {
-      'Cookie': req.headers.get('cookie') || '',
-      'Authorization': req.headers.get('authorization') || '',
-    },
-    credentials: 'include',
-  });
-  
-  const data:StockQuote = await res.json();
-  return new Response(JSON.stringify(data), {
-    status: res.status,
-    headers: {
-      'Content-Type': 'application/json',
-      'Set-Cookie': res.headers.get('set-cookie') || '',
-    },
-  });
+  try {
+    const resolvedParams = await params;
+    const fetchUrl = `https://algo-trading-backend.saral-automations.workers.dev/quote/ticker/${resolvedParams.ticker}`;
+    
+    console.log('Fetching from:', fetchUrl);
+    
+    const res = await fetch(fetchUrl, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    
+    if (!res.ok) {
+      console.error('Backend response not ok:', res.status, res.statusText);
+      return new Response(JSON.stringify({ error: `Backend returned ${res.status}` }), {
+        status: res.status,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+    
+    const data:StockQuote = await res.json();
+    console.log('Successfully fetched data for:', resolvedParams.ticker);
+    
+    return new Response(JSON.stringify(data), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  } catch (error) {
+    console.error('Error in API route:', error);
+    return new Response(JSON.stringify({ error: 'Failed to fetch stock data' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
 } 
