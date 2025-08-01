@@ -8,16 +8,10 @@ export interface Ohlcv extends CandlestickData<Time> {
 }
 
 export async function fetchOhlcv(ticker: string): Promise<Ohlcv[]> {
-  // Use a proper date range that will have data
-  const endDate = new Date();
-  const startDate = new Date();
-  startDate.setDate(startDate.getDate() - 30); // 30 days ago
-  
-  const res = await fetch(`api/quote/history/${ticker}?start=${startDate.toISOString().split('T')[0]}&end=${endDate.toISOString().split('T')[0]}`, { cache: 'no-store' });
+  const res = await fetch(`api/quote/history/${ticker}?start=2025-07-26&end=2025-07-29`, { cache: 'no-store' });
 
   if (!res.ok) {
-    console.error(`Failed to fetch data for ${ticker}: ${res.statusText}`);
-    return []; // Return empty array instead of throwing
+    throw new Error(`Failed to fetch data for ${ticker}`);
   }
 
   const json: Ohlcv[]= await res.json();
@@ -32,11 +26,4 @@ export async function fetchquote(tickers:string[]):Promise<StockQuote[]>{
   return json;
 }
 
-export async function fetchTicker(ticker: string): Promise<StockQuote> {
-  const res = await fetch(`api/quote/ticker/${ticker}`, { cache: 'no-store' });
-  if (!res.ok) {
-    throw new Error(`Failed to fetch ticker data for ${ticker}`);
-  }
-  const json: StockQuote = await res.json();
-  return json;
-}
+

@@ -1,4 +1,5 @@
 
+import { getRequestContext } from "@cloudflare/next-on-pages";
 
 export const runtime = 'edge';
 export async function GET(req: Request, { params }: { params: Promise<{ ticker: string }>}) {
@@ -8,7 +9,8 @@ export async function GET(req: Request, { params }: { params: Promise<{ ticker: 
   const startDate = await searchParams.get('start');
   const endDate = await searchParams.get('end');
   const interval = await searchParams.get('interval') || '5m'; // Default to 5m interval if not provided
-  const fetchUrl = `https://algo-trading-backend.saral-automations.workers.dev/quote/history/${ticker}`
+  // @ts-expect-error: getRequestContext is not defined in the current context
+  const fetchUrl=`${getRequestContext().env.HONO_BACKEND_URL}/quote/history/${ticker}`
   const queryParts = [];
   if (startDate) {
     queryParts.push(`start=${startDate}`);
