@@ -38,6 +38,29 @@ function getCompanyName(symbol: string) {
   return companies[symbol] || `${symbol} Ltd.`;
 }
 
+function getSector(symbol: string) {
+  const sectors: { [key: string]: string } = {
+    'RELIANCE': 'Oil & Gas',
+    'TCS': 'IT',
+    'INFY': 'IT',
+    'HDFC': 'Banking',
+    'WIPRO': 'IT',
+    'TATAMOTORS': 'Automobile'
+  };
+  return sectors[symbol] || 'Others';
+}
+
+// Mini chart data for visual representation
+function getMiniChartData(pnlPercent: number) {
+  const points = [];
+  const baseValue = 100;
+  for (let i = 0; i < 20; i++) {
+    const variation = (Math.random() - 0.5) * 10;
+    points.push(baseValue + variation + (pnlPercent / 10));
+  }
+  return points;
+}
+
 export default function HoldingsCard({ holding, onWithdraw }: HoldingsCardProps) {
   const [showWithdrawModal, setShowWithdrawModal] = useState(false);
   const [sharesToWithdraw, setSharesToWithdraw] = useState('');
@@ -78,69 +101,81 @@ export default function HoldingsCard({ holding, onWithdraw }: HoldingsCardProps)
     }
   };
 
+  const chartData = getMiniChartData(holding.pnlPercent);
+  const maxChartValue = Math.max(...chartData);
+  const minChartValue = Math.min(...chartData);
+
   return (
     <>
-      <div className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-all duration-200">
-        {/* Header with Logo and Company Info */}
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center space-x-4">
-            <div className={`w-12 h-12 rounded-lg flex items-center justify-center text-white font-bold text-lg ${getColorForSymbol(holding.stock_symbol)}`}>
+      <div className="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-lg transition-all duration-200">
+        {/* Main Stock Info Row */}
+        <div className="flex items-center justify-between mb-3">
+          {/* Left: Logo and Company Info */}
+          <div className="flex items-center space-x-3">
+            <div className={`w-10 h-10 rounded-lg flex items-center justify-center text-white font-bold text-sm ${getColorForSymbol(holding.stock_symbol)}`}>
               {holding.stock_symbol.slice(0,2).toUpperCase()}
             </div>
             <div>
-              <div className="font-semibold text-gray-900 text-lg">{holding.stock_symbol}</div>
-              <div className="text-sm text-gray-500">{getCompanyName(holding.stock_symbol)}</div>
-              <div className="text-xs text-gray-400">NSE • {holding.quantity} units</div>
+              <div className="font-semibold text-gray-900 text-base">{holding.stock_symbol}</div>
+              <div className="text-xs text-gray-500">{getCompanyName(holding.stock_symbol)}</div>
+              <div className="text-xs text-gray-400">{getSector(holding.stock_symbol)} • {holding.quantity} units</div>
             </div>
           </div>
+
+          {/* Right: Price and P&L */}
           <div className="text-right">
-            <div className="font-semibold text-gray-900 text-lg">₹{holding.currentPrice.toLocaleString()}</div>
+            <div className="font-semibold text-gray-900 text-base">₹{holding.currentPrice.toLocaleString()}</div>
             <div className={`text-sm font-medium ${holding.pnl >= 0 ? 'text-green-600' : 'text-red-600'}`}>
               {holding.pnl >= 0 ? '+' : ''}₹{holding.pnl.toLocaleString()} ({holding.pnlPercent.toFixed(2)}%)
             </div>
-            <div className="text-xs text-gray-400">Today</div>
           </div>
         </div>
 
-        {/* P&L Bar */}
-        <div className="mb-4">
-          <div className="w-full bg-gray-200 rounded-full h-2">
-            <div 
-              className={`h-2 rounded-full ${holding.pnl >= 0 ? 'bg-green-500' : 'bg-red-500'}`}
-              style={{ width: `${Math.min(Math.abs(holding.pnlPercent), 100)}%` }}
-            ></div>
+        {/* Mini Chart */}
+        <div className="mb-3">
+          <div className="w-full h-8 bg-gray-50 rounded-lg p-1">
+            <svg width="100%" height="100%" viewBox="0 0 100 24" className="overflow-visible">
+              <polyline
+                fill="none"
+                stroke={holding.pnl >= 0 ? "#10B981" : "#EF4444"}
+                strokeWidth="1.5"
+                points={chartData.map((value, index) => 
+                  `${(index / (chartData.length - 1)) * 100},${24 - ((value - minChartValue) / (maxChartValue - minChartValue)) * 20}`
+                ).join(' ')}
+              />
+            </svg>
           </div>
         </div>
 
-        {/* Holdings Details */}
-        <div className="grid grid-cols-3 gap-4 text-sm mb-4">
+        {/* Holdings Summary */}
+        <div className="grid grid-cols-3 gap-2 text-xs mb-3">
           <div>
-            <div className="text-gray-500 text-xs">Avg Price</div>
+            <div className="text-gray-500">Avg Price</div>
             <div className="font-medium text-gray-900">₹{holding.avg_price.toLocaleString()}</div>
           </div>
           <div>
-            <div className="text-gray-500 text-xs">Total Value</div>
+            <div className="text-gray-500">Total Value</div>
             <div className="font-medium text-gray-900">₹{holding.totalValue.toLocaleString()}</div>
           </div>
           <div>
-            <div className="text-gray-500 text-xs">Total Cost</div>
+            <div className="text-gray-500">Total Cost</div>
             <div className="font-medium text-gray-900">₹{holding.totalCost.toLocaleString()}</div>
           </div>
         </div>
 
         {/* Action Buttons */}
-        <div className="flex gap-3">
+        <div className="flex gap-2">
           <button
             onClick={handleWithdrawClick}
-            className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors font-medium text-sm"
+            className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors font-medium text-xs"
           >
-            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 12H4"/>
             </svg>
-            Withdraw Units
+            Withdraw
           </button>
-          <button className="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-medium text-sm">
-            View Details
+          <button className="flex-1 px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-medium text-xs">
+            Details
           </button>
         </div>
       </div>
