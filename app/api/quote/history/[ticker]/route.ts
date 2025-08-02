@@ -41,10 +41,10 @@ function convertDataToChartData(ticker: string) {
     const close = closeData[timestamp];
     const volume = volumeData[timestamp];
     
-    // Generate 5-minute interval data points
-    let currentTime = new Date(marketOpen);
-    let currentPrice = open;
-    let currentVolume = volume / 75; // Distribute volume across 75 intervals (9:30-15:30, 5-min intervals)
+         // Generate 5-minute interval data points
+     let currentTime = new Date(marketOpen);
+     let currentPrice = open;
+     const currentVolume = volume / 75; // Distribute volume across 75 intervals (9:30-15:30, 5-min intervals)
     
     while (currentTime <= marketClose) {
       // Simulate price movement within the day's range
@@ -75,8 +75,8 @@ function convertDataToChartData(ticker: string) {
         volume: Math.floor(currentVolume * (0.5 + Math.random()))
       });
       
-      currentPrice = intradayPrice;
-      currentTime.setMinutes(currentTime.getMinutes() + 5);
+             currentPrice = intradayPrice;
+       currentTime = new Date(currentTime.getTime() + 5 * 60 * 1000); // Add 5 minutes
     }
   }
 
