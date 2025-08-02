@@ -49,7 +49,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ ticker: 
       });
     }
     
-    const dataArray = await res.json();
+    const dataArray = await res.json() as StockQuote[];
     console.log('Successfully fetched data for:', resolvedParams.ticker);
     
     // Backend returns an array, so we need to extract the first item
