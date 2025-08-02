@@ -8,7 +8,7 @@ export interface Ohlcv extends CandlestickData<Time> {
 }
 
 export async function fetchOhlcv(ticker: string): Promise<Ohlcv[]> {
-  const res = await fetch(`api/quote/history/${ticker}?start=2025-07-26&end=2025-07-29`, { cache: 'no-store' });
+  const res = await fetch(`api/quote/history/${ticker}?start=2024-01-01&end=2024-12-31&interval=1d`, { cache: 'no-store' });
 
   if (!res.ok) {
     throw new Error(`Failed to fetch data for ${ticker}`);
