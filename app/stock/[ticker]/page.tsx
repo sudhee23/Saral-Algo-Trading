@@ -62,7 +62,7 @@ export default function StockDetailPage() {
         <Navbar />
         <main className="p-6 flex-1">
           <div className="max-w-4xl mx-auto">
-            <div className="animate-pulse">
+                        <div className="animate-pulse">
               <div className="h-8 bg-gray-300 rounded w-1/4 mb-4"></div>
               <div className="h-64 bg-gray-300 rounded mb-4"></div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

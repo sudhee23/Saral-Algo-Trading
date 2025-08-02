@@ -49,8 +49,18 @@ export async function GET(req: Request, { params }: { params: Promise<{ ticker: 
       });
     }
     
-    const data:StockQuote = await res.json();
+    const dataArray = await res.json();
     console.log('Successfully fetched data for:', resolvedParams.ticker);
+    
+    // Backend returns an array, so we need to extract the first item
+    const data: StockQuote = dataArray[0];
+    
+    if (!data) {
+      return new Response(JSON.stringify({ error: 'No stock data found' }), {
+        status: 404,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
     
     return new Response(JSON.stringify(data), {
       status: 200,
