@@ -17,7 +17,6 @@ const RECOMMENDED_STOCKS = [
     'RELIANCE.NS',
     'TCS.NS', 
     'INFY.NS',
-    'HDBANK.NS',
     'MARUTI.NS'
 ];
 
