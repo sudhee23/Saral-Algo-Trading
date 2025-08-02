@@ -3,6 +3,7 @@
 import { StockQuote } from "@/app/api/quote/ticker/[ticker]/route";
 import { fetchquote } from "@/utils/fetchOhlcv";
 import { useState, useEffect } from "react";
+import Link from "next/link";
 
 // Move SECTOR_TICKERS outside the component
 const SECTOR_TICKERS: Record<string, string> = {
@@ -11,6 +12,14 @@ const SECTOR_TICKERS: Record<string, string> = {
     'PHARMA': '^CNXPHARMA',
     'ENERGY': '^CNXENERGY',
 };
+
+const RECOMMENDED_STOCKS = [
+    'RELIANCE.NS',
+    'TCS.NS', 
+    'INFY.NS',
+    'HDBANK.NS',
+    'MARUTI.NS'
+];
 
 export default function StocksTable() {
     // List of sector along with current value and change percentage using fetchOhlcv
@@ -56,7 +65,17 @@ export default function StocksTable() {
                 </tbody>
             </table>
             <h2 className="text-xl font-semibold mt-6 mb-4">Recommended Stocks</h2>
-            <div className="text-gray-400">RELIANCE.NS, TCS.NS, INFY.NS, HDBANK.NS, MARUTI.NS</div>
+            <div className="space-y-2">
+                {RECOMMENDED_STOCKS.map((stock) => (
+                    <Link 
+                        key={stock} 
+                        href={`/stock/${stock}`}
+                        className="block text-blue-400 hover:text-blue-300 transition-colors"
+                    >
+                        {stock}
+                    </Link>
+                ))}
+            </div>
         </div>
     );
 
