@@ -4,4 +4,3 @@ compatibility_flags = ["nodejs_compat"]
 pages_build_output_dir = ".vercel/output/static"
 [vars]
 JWT_SECRET = "wertyukl,mjhgfdszxcvbnm,.jndfgh"
-HONO_BACKEND_URL = "https://algo-trading-backend.saral-automations.workers.dev"
