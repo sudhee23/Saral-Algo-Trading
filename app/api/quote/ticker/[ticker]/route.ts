@@ -1,5 +1,4 @@
-
-
+import data from "@/data.json";
 
 export const runtime = 'edge';
 export interface StockQuote {
@@ -27,42 +26,74 @@ export interface StockQuote {
   fiftyTwoWeekHigh: number;
   fiftyTwoWeekChangePercent?: number;
 }
+
+// Convert data.json format to StockQuote format
+function convertDataToStockQuote(ticker: string): StockQuote | null {
+  const openKey = `('Open', '${ticker}')`;
+  const highKey = `('High', '${ticker}')`;
+  const lowKey = `('Low', '${ticker}')`;
+  const closeKey = `('Close', '${ticker}')`;
+  const volumeKey = `('Volume', '${ticker}')`;
+
+  const openData = data[openKey as keyof typeof data] as Record<string, number>;
+  const highData = data[highKey as keyof typeof data] as Record<string, number>;
+  const lowData = data[lowKey as keyof typeof data] as Record<string, number>;
+  const closeData = data[closeKey as keyof typeof data] as Record<string, number>;
+  const volumeData = data[volumeKey as keyof typeof data] as Record<string, number>;
+
+  if (!openData || !highData || !lowData || !closeData || !volumeData) {
+    return null;
+  }
+
+  // Get the latest data (last timestamp)
+  const timestamps = Object.keys(closeData).sort();
+  const latestTimestamp = timestamps[timestamps.length - 1];
+  const previousTimestamp = timestamps[timestamps.length - 2];
+
+  const currentPrice = closeData[latestTimestamp];
+  const previousClose = previousTimestamp ? closeData[previousTimestamp] : currentPrice;
+  const openPrice = openData[latestTimestamp];
+  const highPrice = highData[latestTimestamp];
+  const lowPrice = lowData[latestTimestamp];
+  const volume = volumeData[latestTimestamp];
+
+  return {
+    symbol: ticker,
+    shortName: ticker.replace('.NS', ''),
+    longName: ticker.replace('.NS', ' Limited'),
+    currency: 'INR',
+    regularMarketPrice: currentPrice,
+    regularMarketOpen: openPrice,
+    regularMarketPreviousClose: previousClose,
+    regularMarketDayHigh: highPrice,
+    regularMarketDayLow: lowPrice,
+    regularMarketVolume: volume,
+    marketCap: currentPrice * volume * 100, // Approximate market cap
+    fiftyTwoWeekLow: Math.min(...Object.values(lowData)),
+    fiftyTwoWeekHigh: Math.max(...Object.values(highData)),
+  };
+}
+
 export async function GET(req: Request, { params }: { params: Promise<{ ticker: string }>}) {
   try {
     const resolvedParams = await params;
-    const fetchUrl = `https://algo-trading-backend.saral-automations.workers.dev/quote/ticker/${resolvedParams.ticker}`;
+    const ticker = resolvedParams.ticker.toUpperCase();
     
-    console.log('Fetching from:', fetchUrl);
+    console.log('Fetching stock data for:', ticker);
     
-    const res = await fetch(fetchUrl, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    const stockData = convertDataToStockQuote(ticker);
     
-    if (!res.ok) {
-      console.error('Backend response not ok:', res.status, res.statusText);
-      return new Response(JSON.stringify({ error: `Backend returned ${res.status}` }), {
-        status: res.status,
-        headers: { 'Content-Type': 'application/json' },
-      });
-    }
-    
-    const dataArray = await res.json() as StockQuote[];
-    console.log('Successfully fetched data for:', resolvedParams.ticker);
-    
-    // Backend returns an array, so we need to extract the first item
-    const data: StockQuote = dataArray[0];
-    
-    if (!data) {
-      return new Response(JSON.stringify({ error: 'No stock data found' }), {
+    if (!stockData) {
+      console.error('No data found for ticker:', ticker);
+      return new Response(JSON.stringify({ error: 'Stock data not found' }), {
         status: 404,
         headers: { 'Content-Type': 'application/json' },
       });
     }
     
-    return new Response(JSON.stringify([data]), {
+    console.log('Successfully fetched data for:', ticker);
+    
+    return new Response(JSON.stringify([stockData]), {
       status: 200,
       headers: { 'Content-Type': 'application/json' },
     });
