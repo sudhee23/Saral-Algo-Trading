@@ -42,36 +42,30 @@ export function useChart(
         textColor: "#eee",
         attributionLogo: false,
       },
-                     localization: {
-                 locale: "en-US",
-                 timeFormatter: (time: number) => {
-                   const date = new Date(time * 1000);
-                   return date.toLocaleTimeString("en-US", { 
-                     hour: "2-digit", 
-                     minute: "2-digit", 
-                     second: "2-digit",
-                     hour12: true 
-                   });
-                 },
-               },
+      localization: {
+        locale: "en-US",
+        timeFormatter: (time: number) => {
+          return new Date(time * 1000).toLocaleString("en-US");
+        },
+      },
       timeScale: {
         visible: true,
         timeVisible: true,
-                         tickMarkFormatter: (time: number, type: TickMarkType) => {
-                   const date = new Date(time * 1000);
-                   switch (type) {
-                     case TickMarkType.DayOfMonth:
-                       return date.toLocaleDateString("en-US",{month: "long", day: "2-digit", year: "numeric"});
-                     case TickMarkType.Time:
-                       return date.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: true });
-                     case TickMarkType.Month:
-                       return date.toLocaleDateString("en-US", { month: "long", year: "numeric" });
-                     case TickMarkType.Year:
-                       return date.getFullYear().toString();
-                     case TickMarkType.TimeWithSeconds:
-                       return date.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: true });
-                   }
-                 },
+        tickMarkFormatter: (time: number, type: TickMarkType) => {
+          const date = new Date(time * 1000);
+          switch (type) {
+            case TickMarkType.DayOfMonth:
+              return date.toLocaleDateString("en-US",{month: "long", day: "2-digit", year: "numeric"});
+            case TickMarkType.Time:
+              return date.toLocaleTimeString();
+            case TickMarkType.Month:
+              return date.toLocaleDateString("en-US", { month: "long", year: "numeric" });
+            case TickMarkType.Year:
+              return date.getFullYear().toString();
+            case TickMarkType.TimeWithSeconds:
+              return date.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+          }
+        },
       },
       grid: {
         vertLines: { color: "#333" },

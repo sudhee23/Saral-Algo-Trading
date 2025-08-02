@@ -34,7 +34,6 @@ export default function Graph({ initialTicker }: GraphData) {
               </option>
             ))}
           </select>
-
           {["candlestick", "line", "volume"].map((type) => (
             <button
               key={type}
