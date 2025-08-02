@@ -62,7 +62,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ ticker: 
       });
     }
     
-    return new Response(JSON.stringify(data), {
+    return new Response(JSON.stringify([data]), {
       status: 200,
       headers: { 'Content-Type': 'application/json' },
     });
