@@ -45,7 +45,13 @@ export function useChart(
       localization: {
         locale: "en-US",
         timeFormatter: (time: number) => {
-          return new Date(time * 1000).toLocaleString("en-US");
+          const date = new Date(time * 1000);
+          return date.toLocaleTimeString("en-US", { 
+            hour: "2-digit", 
+            minute: "2-digit", 
+            second: "2-digit",
+            hour12: true 
+          });
         },
       },
       timeScale: {
@@ -57,13 +63,13 @@ export function useChart(
             case TickMarkType.DayOfMonth:
               return date.toLocaleDateString("en-US",{month: "long", day: "2-digit", year: "numeric"});
             case TickMarkType.Time:
-              return date.toLocaleTimeString();
+              return date.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: true });
             case TickMarkType.Month:
               return date.toLocaleDateString("en-US", { month: "long", year: "numeric" });
             case TickMarkType.Year:
               return date.getFullYear().toString();
             case TickMarkType.TimeWithSeconds:
-              return date.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+              return date.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: true });
           }
         },
       },
