@@ -31,6 +31,6 @@ export async function fetchTicker(ticker: string): Promise<StockQuote> {
   if (!res.ok) {
     throw new Error(`Failed to fetch ticker data for ${ticker}`);
   }
-  const json: StockQuote = await res.json();
-  return json;
+  const json: StockQuote[] = await res.json();
+  return json[0]; // Backend returns array, so extract first item
 }
