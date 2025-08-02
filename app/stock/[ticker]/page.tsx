@@ -126,7 +126,6 @@ export default function StockDetailPage() {
     { id: 'summary', label: 'Summary' },
     { id: 'chart', label: 'Chart' },
     { id: 'statistics', label: 'Statistics' },
-    { id: 'historical', label: 'Historical Data' },
     { id: 'profile', label: 'Profile' },
     { id: 'financials', label: 'Financials' },
     { id: 'analysis', label: 'Analysis' },
@@ -440,13 +439,7 @@ export default function StockDetailPage() {
             </div>
           )}
 
-          {/* Historical Data Section */}
-          {activeTab === 'historical' && (
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h3 className="text-lg font-semibold text-gray-800 mb-4">Historical Data</h3>
-              <p className="text-gray-600">Historical price data and performance metrics will be displayed here.</p>
-            </div>
-          )}
+
 
           {/* Holdings Section */}
           {activeTab === 'holdings' && (
@@ -530,24 +523,24 @@ export default function StockDetailPage() {
               </div>
             </div>
 
-            {/* Top Gainers */}
-            <div>
-              <h3 className="text-lg font-semibold text-gray-800 mb-3">Top Gainers</h3>
-              <div className="space-y-2">
-                <div className="flex justify-between">
-                  <span className="text-gray-600">TCS.NS</span>
-                  <span className="font-semibold text-green-600">₹3,456.78 +2.34%</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">INFY.NS</span>
-                  <span className="font-semibold text-green-600">₹1,234.56 +1.87%</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">HDBANK.NS</span>
-                  <span className="font-semibold text-green-600">₹987.65 +1.23%</span>
-                </div>
-              </div>
-            </div>
+                         {/* Top Gainers */}
+             <div>
+               <h3 className="text-lg font-semibold text-gray-800 mb-3">Top Gainers</h3>
+               <div className="space-y-2">
+                 <div className="flex justify-between">
+                   <span className="text-gray-600">TCS.NS</span>
+                   <span className="font-semibold text-green-600">₹3,456.78 +2.34%</span>
+                 </div>
+                 <div className="flex justify-between">
+                   <span className="text-gray-600">INFY.NS</span>
+                   <span className="font-semibold text-green-600">₹1,234.56 +1.87%</span>
+                 </div>
+                 <div className="flex justify-between">
+                   <span className="text-gray-600">MARUTI.NS</span>
+                   <span className="font-semibold text-green-600">₹987.65 +1.23%</span>
+                 </div>
+               </div>
+             </div>
           </div>
         </div>
       </main>
