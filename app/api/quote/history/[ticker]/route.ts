@@ -1,44 +1,65 @@
-import { getRequestContext } from "@cloudflare/next-on-pages";
+import data from "@/data.json";
 
 export const runtime = 'edge';
+
+// Convert data.json format to chart data format
+function convertDataToChartData(ticker: string) {
+  const openKey = `('Open', '${ticker}')`;
+  const highKey = `('High', '${ticker}')`;
+  const lowKey = `('Low', '${ticker}')`;
+  const closeKey = `('Close', '${ticker}')`;
+  const volumeKey = `('Volume', '${ticker}')`;
+
+  const openData = data[openKey as keyof typeof data] as Record<string, number>;
+  const highData = data[highKey as keyof typeof data] as Record<string, number>;
+  const lowData = data[lowKey as keyof typeof data] as Record<string, number>;
+  const closeData = data[closeKey as keyof typeof data] as Record<string, number>;
+  const volumeData = data[volumeKey as keyof typeof data] as Record<string, number>;
+
+  if (!openData || !highData || !lowData || !closeData || !volumeData) {
+    return [];
+  }
+
+  const timestamps = Object.keys(closeData).sort();
+
+  return timestamps.map(timestamp => ({
+    time: parseInt(timestamp) / 1000, // Convert milliseconds to seconds
+    open: openData[timestamp],
+    high: highData[timestamp],
+    low: lowData[timestamp],
+    close: closeData[timestamp],
+    volume: volumeData[timestamp]
+  }));
+}
+
 export async function GET(req: Request, { params }: { params: Promise<{ ticker: string }>}) {
-  // async access the ticker from params
-  const { ticker } = await params;
-  const { searchParams } = new URL(req.url); // Extract query params (start, end)
-  const startDate = await searchParams.get('start');
-  const endDate = await searchParams.get('end');
-  const interval = await searchParams.get('interval') || '5m'; // Default to 5m interval if not provided
-  // @ts-expect-error: getRequestContext is not defined in the current context
-  const fetchUrl=`${getRequestContext().env.HONO_BACKEND_URL}/quote/history/${ticker}`
-  const queryParts = [];
-  if (startDate) {
-    queryParts.push(`start=${startDate}`);
+  try {
+    const resolvedParams = await params;
+    const ticker = resolvedParams.ticker.toUpperCase();
+    
+    console.log('Fetching chart data for:', ticker);
+    
+    const chartData = convertDataToChartData(ticker);
+    
+    if (chartData.length === 0) {
+      console.error('No chart data found for ticker:', ticker);
+      return new Response(JSON.stringify({ error: 'Chart data not found' }), {
+        status: 404,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+    
+    console.log('Successfully fetched chart data for:', ticker);
+    
+    return new Response(JSON.stringify(chartData), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  } catch (error) {
+    console.error('Error in history API route:', error);
+    return new Response(JSON.stringify({ error: 'Failed to fetch chart data' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    });
   }
-  if (endDate) {
-    queryParts.push(`end=${endDate}`);
-  }
-  if (interval) {
-    queryParts.push(`interval=${interval}`); // Only add if your Hono backend expects this
-  }
-  const res = await fetch(`${fetchUrl}?${queryParts.join('&')}`, {
-    method: 'GET',
-    headers: {
-      'Cookie': req.headers.get('cookie') || '',
-      'Authorization': req.headers.get('authorization') || '',
-    },
-    credentials: 'include',
-  });
-  if (!res.ok) {
-    console.error(`Failed to fetch data for ${ticker}: ${res.statusText}`);
-    throw new Error(`Failed to fetch data for ${ticker}`);
-  }
-  
-  const data = await res.json();
-  return new Response(JSON.stringify(data), {
-    status: res.status,
-    headers: {
-      'Content-Type': 'application/json',
-      'Set-Cookie': res.headers.get('set-cookie') || '',
-    },
-  });
 } 
