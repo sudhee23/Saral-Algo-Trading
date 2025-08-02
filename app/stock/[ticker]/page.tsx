@@ -2,7 +2,7 @@
 
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { fetchTicker, fetchOhlcv } from '@/utils/fetchOhlcv';
+import { fetchTicker } from '@/utils/fetchOhlcv';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import Graph from '@/components/Graph';
@@ -204,7 +204,7 @@ export default function StockDetailPage() {
                     <div className="font-semibold">₹{stockData.regularMarketOpen.toFixed(2)}</div>
                   </div>
                   <div>
-                    <div className="text-sm text-gray-600">Day's Range</div>
+                    <div className="text-sm text-gray-600">Day&apos;s Range</div>
                     <div className="font-semibold">₹{stockData.regularMarketDayLow.toFixed(2)} - ₹{stockData.regularMarketDayHigh.toFixed(2)}</div>
                   </div>
                   <div>
