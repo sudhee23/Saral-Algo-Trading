@@ -184,7 +184,7 @@ export default function StockDetailPage() {
           {/* Chart Section */}
           {activeTab === 'chart' && (
             <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-              <Graph initialTicker={ticker} />
+              <Graph initialTicker={ticker} showTickerSelector={false}/>
             </div>
           )}
 
@@ -236,7 +236,7 @@ export default function StockDetailPage() {
 
               {/* Chart */}
               <div className="bg-white rounded-lg shadow-md p-6">
-                <Graph initialTicker={ticker} />
+                <Graph initialTicker={ticker} showTickerSelector={false}/>
               </div>
             </div>
           )}
