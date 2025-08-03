@@ -28,7 +28,6 @@ export interface StockQuote {
   fiftyTwoWeekChangePercent?: number;
 }
 export async function GET(req: Request, { params }: { params: Promise<{ ticker: string }>}) {
-  // @ts-expect-error: getRequestContext is not defined in the current context
   const { ticker } = await params;
   const fetchUrl=`https://algo-trading-backend.saral-automations.workers.dev/quote/ticker/${ticker}`
   const res = await fetch(fetchUrl, {
