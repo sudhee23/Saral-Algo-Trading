@@ -29,7 +29,7 @@ export interface StockQuote {
 export async function GET(req: Request, { params }: { params: Promise<{ ticker: string }>}) {
   const { ticker } = await params;
   //@ts-expect-error: backend Url
-  const backendBase = getRequestContext().env.HONO_BACKEND_URL |'https://algo-trading-backend.saral-automations.workers.dev'
+  const backendBase = getRequestContext().env.HONO_BACKEND_URL || 'https://algo-trading-backend.saral-automations.workers.dev'
   const decodedticker = decodeURIComponent(ticker)
   const fetchUrl=`${backendBase}/quote/ticker/${decodedticker}`
   const res = await fetch(fetchUrl, {
