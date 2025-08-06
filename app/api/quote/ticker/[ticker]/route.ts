@@ -1,5 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { getRequestContext } from "@cloudflare/next-on-pages";
+import { getContext } from "hono/context-storage";
 
 export const runtime = 'edge';
 export interface StockQuote {
@@ -29,7 +30,9 @@ export interface StockQuote {
 }
 export async function GET(req: Request, { params }: { params: Promise<{ ticker: string }>}) {
   const { ticker } = await params;
-  const fetchUrl=`https://algo-trading-backend.saral-automations.workers.dev/quote/ticker/${ticker}`
+  //@ts-expect-error: backend Url
+  const backendBase = getContext().env.HONO_BACKEND_URL |'https://algo-trading-backend.saral-automations.workers.dev'
+  const fetchUrl=`${backendBase}/quote/ticker/${ticker}`
   const res = await fetch(fetchUrl, {
     method: 'GET',
     headers: {
