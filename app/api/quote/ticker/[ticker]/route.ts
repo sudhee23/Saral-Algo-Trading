@@ -30,7 +30,8 @@ export async function GET(req: Request, { params }: { params: Promise<{ ticker: 
   const { ticker } = await params;
   //@ts-expect-error: backend Url
   const backendBase = getRequestContext().env.HONO_BACKEND_URL |'https://algo-trading-backend.saral-automations.workers.dev'
-  const fetchUrl=`${backendBase}/quote/ticker/${ticker}`
+  const decodedticker = decodeURIComponent(ticker)
+  const fetchUrl=`${backendBase}/quote/ticker/${decodedticker}`
   const res = await fetch(fetchUrl, {
     method: 'GET',
     headers: {
