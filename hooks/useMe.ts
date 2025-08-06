@@ -14,7 +14,13 @@ async function fetcher(url: string): Promise<{ user: User | null }> {
   if (!res.ok) {
     return { user: null }; // treat as logged out
   }
-  return res.json();
+  if (res.status != 200) {
+    // Treat as not logged in, without error
+    return { user: null };
+  }
+  if (res && res.status === 200)
+    return res.json();
+  return { user: null };
 }
 
 export function useMe() {
