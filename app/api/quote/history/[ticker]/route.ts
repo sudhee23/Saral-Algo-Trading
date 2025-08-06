@@ -1,5 +1,4 @@
-import { getContext } from "hono/context-storage";
-
+import { getRequestContext } from "@cloudflare/next-on-pages";
 export const runtime = 'edge';
 
 export async function GET(req: Request, { params }: { params: Promise<{ ticker: string }> }) {
@@ -13,7 +12,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ ticker: 
     const interval = url.searchParams.get('interval') || '5m';
 
     //@ts-expect-error: Backend URL from env
-    const backendBase = getContext().env.HONO_BACKEND_URL || 'https://algo-trading-backend.saral-automations.workers.dev';
+    const backendBase = getRequestContext().env.HONO_BACKEND_URL || 'https://algo-trading-backend.saral-automations.workers.dev';
     const backendUrl = new URL(`/quote/history/${ticker}`, backendBase);
     if (start) backendUrl.searchParams.set('start', start);
     if (end) backendUrl.searchParams.set('end', end);
